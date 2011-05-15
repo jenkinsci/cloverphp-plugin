@@ -86,8 +86,7 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
     }
 
     public String getUrlName() {
-        // TODO: more shorter
-        return "clover-php-report";
+        return "cloverphp-report";
     }
 
     public Object getTarget() {

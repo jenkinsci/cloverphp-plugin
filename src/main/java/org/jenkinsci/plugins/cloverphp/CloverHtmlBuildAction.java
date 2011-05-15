@@ -35,7 +35,6 @@ public class CloverHtmlBuildAction implements Action {
     }
 
     public String getUrlName() {
-        // TODO: more shorter
-        return "clover-php-html";
+        return "cloverphp-html";
     }
 }

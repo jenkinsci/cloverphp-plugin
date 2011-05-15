@@ -38,12 +38,11 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
         final File reportDir = getLastBuildReportDir();
         if (reportDir != null
                 && (new File(reportDir, "index.html").exists()
-                || new File(reportDir, "clover.pdf").exists()
                 || new File(reportDir, "clover.xml").exists())) {
             return ICON;
-        } else {
-            return null;
         }
+        return null;
+        
     }
 
     private File getLastBuildReportDir() {
@@ -63,9 +62,6 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
         }
         if (new File(reportDir, "index.html").exists()) {
             return Messages.CloverProjectAction_HTML_DisplayName();
-        }
-        if (new File(reportDir, "clover.pdf").exists()) {
-            return Messages.CloverProjectAction_PDF_DisplayName();
         }
         if (new File(reportDir, "clover.xml").exists()) {
             return Messages.CloverProjectAction_XML_DisplayName();
@@ -112,9 +108,11 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
 
         final File reportDir = getLastBuildReportDir();
 
-        // there is a report if there was a build already, and there is a report
-        if (reportDir != null && new File(reportDir, "index.html").exists()
-                && getDisplayName() != null) {
+        if (reportDir == null || getDisplayName() == null) {
+            throw new Failure(Messages.CloverProjectAction_InvalidConfiguration());
+        }
+        
+        if (new File(reportDir, "index.html").exists()) {
             return new DirectoryBrowserSupport(
                     this, new FilePath(project.getLastBuild().getRootDir()),
                     "Clover Html Report", "/cloverphp/clover.gif", false);
