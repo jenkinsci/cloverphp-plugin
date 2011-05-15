@@ -22,9 +22,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/ssogabe/clover-php-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:ssogabe/clover-php-plugin.git</developerConnection>
-        <url>http://github.com/ssogabe/clover-php-plugin</url>
+        <connection>scm:git:git://github.com/ssogabe/cloverphp-plugin.git</connection>
+        <developerConnection>scm:git:git@github.com:ssogabe/cloverphp-plugin.git</developerConnection>
+        <url>http://github.com/ssogabe/cloverphp-plugin</url>
     </scm>
 
     <properties>
