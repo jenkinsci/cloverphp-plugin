@@ -1,0 +1,75 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <f:entry title="${%Clover report directory}"
+           description="${%description.cloverReportDir}">
+        <f:textbox name="clover.reportDir" value="${instance.reportDir}" 
+                   checkUrl="'descriptorByName/CloverPublisher/requiredCheck?value='+encodeURIComponent(this.value)" />
+    </f:entry>
+    <f:entry title="${%Clover report file name}"
+           description="${%description.cloverReportFileName}">
+        <f:textbox name="clover.reportFileName" value="${instance.reportFileName}"/>
+    </f:entry>
+    <f:entry title="${%Keep clover report}"
+           description="${%description.keepReport}">
+        <f:checkbox name="clover.keepReport" checked="${instance.isKeepReport()}"/>
+    </f:entry>
+    
+    <f:entry title="${%Coverage Metric Targets}"
+             description="${%description.metric.targets(rootURL)}">
+        <table width="70%">
+            <thead>
+                <tr>
+                    <td width="10%"></td>
+                    <td>% ${%Methods}</td>
+                    <td>% ${%Statements}</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>
+                        <img src="${rootURL}/images/16x16/health-80plus.gif" alt="100%"
+                             title="${%Report health as 100% when coverage is greater than}" />
+                    </th>
+                    <td>
+                        <f:textbox name="cloverHealthyTarget.methodCoverage"
+                                   value="${instance.healthyTarget.methodCoverage}" />
+                    </td>
+                    <td>
+                        <f:textbox name="cloverHealthyTarget.statementCoverage"
+                                   value="${instance.healthyTarget.statementCoverage}" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="${rootURL}/images/16x16/health-00to19.gif" alt="0%"
+                             title="${%Report health as 0% when coverage is less than}" />
+                    </th>
+                    <td>
+                        <f:textbox name="cloverUnhealthyTarget.methodCoverage"
+                                   value="${instance.unhealthyTarget.methodCoverage}" />
+                    </td>
+                    <td>
+                        <f:textbox name="cloverUnhealthyTarget.statementCoverage"
+                                   value="${instance.unhealthyTarget.statementCoverage}" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="${rootURL}/images/16x16/yellow.gif" alt="0%"
+                             title="${%Mark the build as unstable when coverage is less than}" />
+                    </th>
+                    <td>
+                        <f:textbox name="cloverFailingTarget.methodCoverage"
+                                   value="${instance.failingTarget.methodCoverage}" />
+                    </td>
+                    <td>
+                        <f:textbox name="cloverFailingTarget.statementCoverage"
+                                   value="${instance.failingTarget.statementCoverage}" />
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </f:entry>
+</j:jelly>

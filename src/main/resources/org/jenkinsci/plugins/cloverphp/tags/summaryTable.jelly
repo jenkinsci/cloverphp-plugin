@@ -1,0 +1,25 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+         xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
+              
+        <table class="coverage" style="width: 700px;">
+            <clover:captionLine />
+            <tr>
+                <td>${title}</td>
+                <td>
+                    <j:set var="provider" value="${it.elementCoverage}"/>
+                    <clover:coverage-bar/>
+                </td>
+                <td class="data" data="${it.loc}">${it.loc}</td>
+                <td class="data" data="${it.nloc}">${it.ncloc}</td>
+                <td class="data" data="${it.methodCoverage.percentageFloat}">${it.methodCoverage.percentageStr}
+                (${it.methodCoverage})
+                </td>
+                <td class="data" data="${it.statementCoverage.percentageFloat}">${it.statementCoverage.percentageStr}
+                (${it.statementCoverage})
+                </td>
+            </tr>
+        </table>
+   
+</j:jelly>

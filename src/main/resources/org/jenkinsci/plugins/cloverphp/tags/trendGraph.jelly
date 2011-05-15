@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div style="padding: 20px;">
+  <img src="trendGraph/png" width="500" height="200"/>
+</div>

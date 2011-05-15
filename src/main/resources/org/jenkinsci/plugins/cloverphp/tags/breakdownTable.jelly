@@ -1,0 +1,30 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+         xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
+    <table class="coverage sortable" style="width: 700px;">
+        <clover:captionLine />
+        <j:forEach var="c" items="${it.children}">
+            <tr>
+                <td bgcolor="${h.ifThenElse(c.failed,'red',null)}">
+                    <a href="${h.ifThenElse(nolink!=null,null,c.URLSafeName+'/')}">
+                        <st:out value="${c.name}" />
+                    </a>
+                </td>
+                <td>
+                    <j:set var="provider" value="${c.elementCoverage}"/>
+                    <clover:coverage-bar/>
+                </td>
+                
+                <td class="data" data="${c.loc}">${c.loc}</td>
+                <td class="data" data="${c.nloc}">${c.ncloc}</td>
+                <td class="data" data="${c.methodCoverage.percentageFloat}">${c.methodCoverage.percentageStr}
+                    (${c.methodCoverage})
+                </td>
+                <td class="data" data="${c.statementCoverage.percentageFloat}">${c.statementCoverage.percentageStr}
+                    (${c.statementCoverage})
+                </td>
+            </tr>
+        </j:forEach>
+    </table>
+</j:jelly>

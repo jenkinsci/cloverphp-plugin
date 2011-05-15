@@ -1,0 +1,12 @@
+.coverage {
+    border-collapse: collapse;
+}
+
+.coverage th, .coverage tr, .coverage td {
+    border: 1px #a9a9a9 solid; 
+    padding: 5px 5px;
+}
+
+.data {
+    text-align: right;
+}

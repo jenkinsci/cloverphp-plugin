@@ -1,0 +1,13 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+         xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
+    <tr>
+        <th>${%name}</th>
+        <th>${%Total Coverage} %</th>
+        <th>${%LOC}</th>
+        <th>${%NCLOC}</th>
+        <th>${%method,} %</th>
+        <th>${%statements,} %</th>
+    </tr>
+</j:jelly>

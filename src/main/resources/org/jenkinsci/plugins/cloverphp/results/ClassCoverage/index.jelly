@@ -1,0 +1,18 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+    <l:layout xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags" css="/plugin/cloverphp/css/style.css" >
+        <st:include it="${it.owner}" page="sidepanel.jelly" />
+        <l:main-panel>
+            <h1>${%Clover Coverage Report}</h1>
+
+            <j:if test="${it.previousResult != null}">
+              <clover:trendGraph />
+            </j:if>
+
+            <h2>${%Coverage Summary}</h2>
+            <clover:shortSummaryTable title="${it.name}" />
+
+        </l:main-panel>
+    </l:layout>
+</j:jelly>
