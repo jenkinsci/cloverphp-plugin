@@ -42,7 +42,7 @@ public class CloverPublisher extends Recorder {
 
     private final String reportFileName;
 
-    private final boolean keepReport;
+    private final boolean disableArchiving;
 
     private CoverageTarget healthyTarget;
 
@@ -56,10 +56,10 @@ public class CloverPublisher extends Recorder {
      * @stapler-constructor
      */
     @DataBoundConstructor
-    public CloverPublisher(String reportDir, String reportFileName, boolean keepReport) {
+    public CloverPublisher(String reportDir, String reportFileName, boolean disableArchiving) {
         this.reportDir = reportDir;
         this.reportFileName = reportFileName;
-        this.keepReport = keepReport;
+        this.disableArchiving = disableArchiving;
         this.healthyTarget = new CoverageTarget();
         this.unhealthyTarget = new CoverageTarget();
         this.failingTarget = new CoverageTarget();
@@ -76,8 +76,8 @@ public class CloverPublisher extends Recorder {
         return reportFileName;
     }
 
-    public boolean isKeepReport() {
-        return keepReport;
+    public boolean isDisableArchiving() {
+        return disableArchiving;
     }
 
     /**
@@ -169,7 +169,7 @@ public class CloverPublisher extends Recorder {
                 return true;
             }
 
-            if (keepReport) {
+            if (!isDisableArchiving()) {
                 final boolean htmlExists = copyHtmlReport(coverageReportDir, buildTarget, listener);
                 if (htmlExists) {
                     // only add the HTML build action, if the HTML report is available

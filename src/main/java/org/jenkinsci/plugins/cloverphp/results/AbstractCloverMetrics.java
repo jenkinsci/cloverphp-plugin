@@ -249,6 +249,8 @@ public abstract class AbstractCloverMetrics {
                             Messages.AbstractCloverMetrics_Label_method(), label);
                     dsb.add(m.getStatementCoverage().getPercentageFloat(),
                             Messages.AbstractCloverMetrics_Label_statement(), label);
+                    dsb.add(m.getElementCoverage().getPercentageFloat(),
+                            Messages.AbstractCloverMetrics_Label_element(), label);
                 }
                 return dsb;
             }

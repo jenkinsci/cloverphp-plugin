@@ -10,9 +10,8 @@
            description="${%description.cloverReportFileName}">
         <f:textbox name="clover.reportFileName" value="${instance.reportFileName}"/>
     </f:entry>
-    <f:entry title="${%Keep clover report}"
-           description="${%description.keepReport}">
-        <f:checkbox name="clover.keepReport" checked="${instance.isKeepReport()}"/>
+    <f:entry title="${%Disable report archiving}">
+        <f:checkbox name="clover.disableArchiving" checked="${instance.isDisableArchiving()}" />
     </f:entry>
     
     <f:entry title="${%Coverage Metric Targets}"
