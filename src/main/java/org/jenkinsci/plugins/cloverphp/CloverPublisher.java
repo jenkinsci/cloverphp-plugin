@@ -197,23 +197,11 @@ public class CloverPublisher extends Recorder {
      */
     private void processCloverXml(AbstractBuild<?, ?> build, BuildListener listener,
             FilePath coverageReport, FilePath buildTarget) throws InterruptedException {
-        String workspacePath = "";
-        try {
-            workspacePath = build.getWorkspace().act(new FilePath.FileCallable<String>() {
-
-                public String invoke(File file, VirtualChannel virtualChannel) throws IOException {
-                    try {
-                        return file.getCanonicalPath();
-                    } catch (IOException e) {
-                        return file.getAbsolutePath();
-                    }
-                }
-            });
-        } catch (IOException e) {
-        }
+        String workspacePath = build.getWorkspace().getRemote();
         if (!workspacePath.endsWith(File.separator)) {
             workspacePath += File.separator;
         }
+        System.out.append("workspacePath: " + workspacePath);
 
         final File cloverXmlReport = getCloverXmlReport(build);
         if (cloverXmlReport.exists()) {

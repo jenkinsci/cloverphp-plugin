@@ -116,7 +116,12 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
             return new DirectoryBrowserSupport(
                     this, new FilePath(project.getLastBuild().getRootDir()),
                     "Clover Html Report", "/cloverphp/clover.gif", false);
-
+        }
+        if (new File(reportDir, "clover.xml").exists()) {
+            if (project.getLastBuild() != null) {
+                int buildNumber = project.getLastBuild().getNumber();
+                rsp.sendRedirect2("../" + buildNumber + "/cloverphp-report");
+            }
         }
         
         throw new Failure(Messages.CloverProjectAction_HTML_NoCloverReportFound());
