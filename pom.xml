@@ -29,7 +29,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-<!--
+
     <build>
         <extensions>
             <extension>
@@ -39,7 +39,6 @@
             </extension>
         </extensions>                
     </build>
--->
 
     <profiles>
         <profile>
@@ -139,6 +138,10 @@
         <repository>
             <id>m.g.o-public</id>
             <url>http://maven.glassfish.org/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>b.d.j-public</id>
+            <url>http://bacons.ddo.jp/maven2/</url>
         </repository>
     </repositories>
 
