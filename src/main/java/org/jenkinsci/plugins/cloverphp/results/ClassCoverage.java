@@ -23,20 +23,4 @@ public class ClassCoverage extends AbstractCloverMetrics {
         }
         return fc.findClassCoverage(getURLSafeName());
     }
-
-    /**
-     *  set classname only. 
-     * @param name 
-     */
-    @Override
-    public void setName(String name) {
-        if (name != null) {
-            int idx = name.lastIndexOf('.');
-            if (idx > 0) {
-                name = name.substring(idx + 1);
-            }
-        }
-        super.setName(name);
-    }
- 
 }

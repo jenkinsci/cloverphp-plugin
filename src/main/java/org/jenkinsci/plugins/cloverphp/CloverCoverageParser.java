@@ -36,9 +36,6 @@ public final class CloverCoverageParser {
                 f.setName(f.getName().substring(pathPrefix.length()));
             }
             f.setName(f.getName().replace('\\', '/'));
-            for (ClassCoverage c : f.getClassCoverages()) {
-                c.setName(f.getName() + "." + c.getName());
-            }
         }
         return result;
     }
