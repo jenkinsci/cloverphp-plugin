@@ -1,12 +1,13 @@
 package org.jenkinsci.plugins.cloverphp;
 
-import junit.framework.TestCase;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * JUnit test for {@link Ratio}
  */
-public class RatioTest extends TestCase {
+public class RatioTest {
 
     final void assertRatio(Ratio r, float numerator, float denominator) {
         assertEquals(numerator, r.numerator);
@@ -20,7 +21,7 @@ public class RatioTest extends TestCase {
      * @throws Exception
      */
     public void testParseValue() throws Exception {
-        assertRatio(Ratio.create(1,2), 1.0f, 2.0f);
+        assertRatio(Ratio.create(1, 2), 1.0f, 2.0f);
     }
 
     /**
@@ -60,7 +61,7 @@ public class RatioTest extends TestCase {
         ratio = Ratio.create(1.0f, -5.0f);
         assertEquals("-", ratio.getPercentageStr());
     }
-    
+
     /**
      * Test of getPcWidth method, of class Ratio.
      */
@@ -98,7 +99,7 @@ public class RatioTest extends TestCase {
         ratio = Ratio.create(1.0f, 0.0f);
         assertEquals("-", ratio.getPcCovered());
     }
-    
+
     /**
      * Test of getHasData method, of class Ratio.
      */
@@ -166,7 +167,7 @@ public class RatioTest extends TestCase {
         Ratio another = Ratio.create(5.0f, 10.0f);
         assertTrue(ratio.equals(another));
     }
-    
+
     /**
      * Test of equals method, of class Ratio.
      */
@@ -176,7 +177,7 @@ public class RatioTest extends TestCase {
         assertFalse(ratio.equals(null));
         assertFalse(ratio.equals(Integer.class));
     }
-    
+
     /**
      * Test of create method, of class Ratio.
      */

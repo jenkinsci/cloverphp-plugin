@@ -1,12 +1,10 @@
 package org.jenkinsci.plugins.cloverphp;
 
 import org.junit.Test;
-import junit.framework.TestSuite;
-import junit.framework.TestCase;
 import org.jenkinsci.plugins.cloverphp.results.ClassCoverage;
 import org.jenkinsci.plugins.cloverphp.results.FileCoverage;
 import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
-
+import static org.junit.Assert.*;
 
 /**
  * CloverCoverageParser Tester.
@@ -15,11 +13,7 @@ import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
  * @author Seiji Sogabe
  * @version 1.0
  */
-public class CloverCoverageParserTest extends TestCase {
-
-    public CloverCoverageParserTest(String name) {
-        super(name);
-    }
+public class CloverCoverageParserTest {
 
     @Test
     public void testTrimPaths_NullResult() {
