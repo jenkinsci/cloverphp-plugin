@@ -13,7 +13,6 @@ import hudson.model.Result;
 import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
 import org.jenkinsci.plugins.cloverphp.targets.CoverageMetric;
 import org.jenkinsci.plugins.cloverphp.targets.CoverageTarget;
-import hudson.remoting.VirtualChannel;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -22,7 +21,6 @@ import hudson.util.FormValidation;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 import net.sf.json.JSONObject;
@@ -38,9 +36,11 @@ import org.kohsuke.stapler.StaplerRequest;
  */
 public class CloverPublisher extends Recorder {
 
+    private final boolean publishHtmlReport;
+    
     private final String reportDir;
 
-    private final String reportFileName;
+    private final String xmlLocation;
 
     private final boolean disableArchiving;
 
@@ -52,28 +52,30 @@ public class CloverPublisher extends Recorder {
 
     /**
      * @param reportDir
-     * @param reportFileName
+     * @param xmlLocation
      * @stapler-constructor
      */
     @DataBoundConstructor
-    public CloverPublisher(String reportDir, String reportFileName, boolean disableArchiving) {
+    public CloverPublisher(String xmlLocation, String publishHtmlReport, String reportDir, boolean disableArchiving) {
+        this.publishHtmlReport = publishHtmlReport != null;
         this.reportDir = reportDir;
-        this.reportFileName = reportFileName;
+        this.xmlLocation = xmlLocation;
         this.disableArchiving = disableArchiving;
         this.healthyTarget = new CoverageTarget();
         this.unhealthyTarget = new CoverageTarget();
         this.failingTarget = new CoverageTarget();
     }
 
+    public boolean isPublishHtmlReport() {
+        return publishHtmlReport;
+    }
+    
     public String getReportDir() {
         return reportDir;
     }
 
-    public String getReportFileName() {
-        if (reportFileName == null || reportFileName.trim().length() == 0) {
-            return "clover.xml";
-        }
-        return reportFileName;
+    public String getXmlLocation() {
+        return xmlLocation;
     }
 
     public boolean isDisableArchiving() {
@@ -153,11 +155,6 @@ public class CloverPublisher extends Recorder {
         try {
             listener.getLogger().println("Publishing Clover coverage report...");
 
-            // search one deep for the report dir, if it doesn't exist.
-            if (!coverageReportDir.exists()) {
-                coverageReportDir = findOneDirDeep(workspace, reportDir);
-            }
-
             // if the build has failed, then there's not
             // much point in reporting an error
             final boolean buildFailure = build.getResult().isWorseOrEqualTo(Result.FAILURE);
@@ -169,7 +166,7 @@ public class CloverPublisher extends Recorder {
                 return true;
             }
 
-            if (!isDisableArchiving()) {
+            if (isPublishHtmlReport() && !isDisableArchiving()) {
                 final boolean htmlExists = copyHtmlReport(coverageReportDir, buildTarget, listener);
                 if (htmlExists) {
                     // only add the HTML build action, if the HTML report is available
@@ -177,7 +174,7 @@ public class CloverPublisher extends Recorder {
                 }
             }
 
-            final boolean xmlExists = copyXmlReport(coverageReportDir, buildTarget, listener);
+            final boolean xmlExists = copyXmlReport(workspace, buildTarget, listener);
             processCloverXml(build, listener, coverageReportDir, buildTarget);
 
         } catch (IOException e) {
@@ -232,75 +229,46 @@ public class CloverPublisher extends Recorder {
         }
     }
 
-    private boolean copyXmlReport(FilePath coverageReport, FilePath buildTarget, BuildListener listener)
+    private boolean copyXmlReport(FilePath workspace, FilePath buildTarget, BuildListener listener)
             throws IOException, InterruptedException {
         // check one directory deep for a clover.xml, if there is not one in the coverageReport dir already
         // the clover auto-integration saves clover reports in: clover/${ant.project.name}/clover.xml
-        final FilePath cloverXmlPath = findOneDirDeep(coverageReport, getReportFileName());
+        final FilePath cloverXmlPath = workspace.child(getXmlLocation());
         final FilePath toFile = buildTarget.child("clover.xml");
         if (cloverXmlPath.exists()) {
             listener.getLogger().println("Publishing Clover XML report...");
             cloverXmlPath.copyTo(toFile);
             return true;
-        } else {
-            listener.getLogger().println("Clover xml file does not exist in: " + coverageReport
-                    + " called: " + getReportFileName()
-                    + " and will not be copied to: " + toFile);
-            return false;
         }
+        listener.getLogger().println("Clover xml file does not exist in: " + workspace
+                + " called: " + getXmlLocation()
+                + " and will not be copied to: " + toFile);
+        return false;
+
     }
 
-    private boolean copyHtmlReport(FilePath coverageReport, FilePath buildTarget, BuildListener listener)
+    private boolean copyHtmlReport(FilePath coverageReportDir, FilePath buildTarget, BuildListener listener)
             throws IOException, InterruptedException {
         // Copy the HTML coverage report
-        final FilePath htmlIndexHtmlPath = findOneDirDeep(coverageReport, "index.html");
+        final FilePath htmlIndexHtmlPath = coverageReportDir.child("index.html");
         if (htmlIndexHtmlPath.exists()) {
             final FilePath htmlDirPath = htmlIndexHtmlPath.getParent();
             listener.getLogger().println("Publishing Clover HTML report...");
             htmlDirPath.copyRecursiveTo("**/*", buildTarget);
             return true;
-        } else {
-            return false;
         }
-    }
-
-    /**
-     * Searches the current directory and its immediate children directories for filename.
-     * The first occurence is returned.
-     * @param startDir the dir to start searching in
-     * @param filename the filename to search for
-     * @return the path of filename
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    private FilePath findOneDirDeep(final FilePath startDir, final String filename)
-            throws IOException, InterruptedException {
-
-        FilePath dirContainingFile = startDir;
-        if (!dirContainingFile.child(filename).exists()) {
-            // use the first directory with filename in it
-            final List<FilePath> dirs = dirContainingFile.listDirectories();
-            if (dirs != null) {
-                for (FilePath dir : dirs) {
-                    if (dir.child(filename).exists()) {
-                        dirContainingFile = dir;
-                        break;
-                    }
-                }
-            }
-        }
-        return dirContainingFile.child(filename);
+        return false;
     }
 
     private void flagMissingCloverXml(BuildListener listener, AbstractBuild<?, ?> build) {
-        listener.getLogger().println("Could not find '" + reportDir + "/" + getReportFileName()
+        listener.getLogger().println("Could not find '" + reportDir + "/" + getXmlLocation()
                 + "'.  Did you generate " + "the XML report for Clover?");
     }
 
     @Override
     public Action getProjectAction(AbstractProject<?, ?> project) {
         if (project instanceof Project) {
-            return new CloverProjectAction((Project) project);
+            return new CloverProjectAction((Project) project, this);
         }
         return null;
     }

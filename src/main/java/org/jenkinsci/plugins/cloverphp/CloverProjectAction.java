@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.cloverphp;
 
 import hudson.FilePath;
+import hudson.model.AbstractBuild;
 import hudson.model.Project;
 import hudson.model.ProminentProjectAction;
 import hudson.model.Build;
@@ -15,6 +16,7 @@ import org.kohsuke.stapler.StaplerResponse;
 import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Project level action.
@@ -28,51 +30,48 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
     static final String ICON = "/plugin/cloverphp/clover_48x48.png";
 
     private final Project<?, ?> project;
+    
+    private final CloverPublisher publisher;
 
-    public CloverProjectAction(Project project) {
+    public CloverProjectAction(Project project, CloverPublisher publisher) {
         this.project = project;
-    }
-
-    public String getIconFileName() {
-
-        final File reportDir = getLastBuildReportDir();
-        if (reportDir != null
-                && (new File(reportDir, "index.html").exists()
-                || new File(reportDir, "clover.xml").exists())) {
-            return ICON;
-        }
-        return null;
-        
-    }
-
-    private File getLastBuildReportDir() {
-        if (project.getLastBuild() == null) {
-            // no clover report links, until there is at least one build
-            return null;
-        }
-        final File reportDir = project.getLastBuild().getRootDir();
-        return reportDir;
-    }
-
-    public String getDisplayName() {
-        final File reportDir = getLastBuildReportDir();
-
-        if (reportDir == null) {
-            return null;
-        }
-        if (new File(reportDir, "index.html").exists()) {
-            return Messages.CloverProjectAction_HTML_DisplayName();
-        }
-        if (new File(reportDir, "clover.xml").exists()) {
-            return Messages.CloverProjectAction_XML_DisplayName();
-        }
-
-        return null;
-
+        this.publisher = publisher;
     }
 
     public String getUrlName() {
         return "cloverphp";
+    }
+
+    public String getSearchUrl() {
+        return getUrlName();
+    }
+
+    public String getIconFileName() {
+        if (publisher.isPublishHtmlReport()) {
+            FilePath r = getWorkspaceReportDir();
+            if (exists(r, "index.html")) {
+                return ICON;
+            }
+        }
+        File reportDir = getLastBuildReportDir();
+        if (exists(new FilePath(reportDir), "clover.xml")) {
+            return ICON;
+        }
+        return null;
+    }
+
+    public String getDisplayName() {
+        if (publisher.isPublishHtmlReport()) {
+            FilePath r = getWorkspaceReportDir();
+            if (exists(r, "index.html")) {
+                return Messages.CloverProjectAction_HTML_DisplayName();
+            }
+        }
+        final File reportDir = getLastBuildReportDir();
+        if (exists(new FilePath(reportDir), "clover.xml")) {
+            return Messages.CloverProjectAction_XML_DisplayName();
+        }
+        return null;
     }
 
     /**
@@ -106,16 +105,17 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
             throws IOException, ServletException,
             InterruptedException {
 
-        final File reportDir = getLastBuildReportDir();
+        if (publisher.isPublishHtmlReport()) {
+            FilePath r = getWorkspaceReportDir();
+            if (exists(r, "index.html")) {
+                return new DirectoryBrowserSupport(
+                        this, r, "Clover Html Report", "/cloverphp/clover.gif", false);
+            }
+        }
 
+        File reportDir = getLastBuildReportDir();
         if (reportDir == null || getDisplayName() == null) {
             throw new Failure(Messages.CloverProjectAction_InvalidConfiguration());
-        }
-        
-        if (new File(reportDir, "index.html").exists()) {
-            return new DirectoryBrowserSupport(
-                    this, new FilePath(project.getLastBuild().getRootDir()),
-                    "Clover Html Report", "/cloverphp/clover.gif", false);
         }
         if (new File(reportDir, "clover.xml").exists()) {
             if (project.getLastBuild() != null) {
@@ -127,7 +127,40 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
         throw new Failure(Messages.CloverProjectAction_HTML_NoCloverReportFound());
     }
 
-    public String getSearchUrl() {
-        return getUrlName();
+    private boolean exists(FilePath base, String file) {
+        if (base == null) {
+            return false;
+        }
+        try {
+            return base.child(file).exists();
+        } catch (IOException ex) {
+            LOGGER.warning(ex.getMessage());
+        } catch (InterruptedException ex) {
+            LOGGER.warning(ex.getMessage());
+        }
+        return false;
+    } 
+    
+    private FilePath getWorkspaceReportDir() {
+        AbstractBuild<?, ?> lb = project.getLastBuild();
+        if (lb == null) {
+            return null;
+        }
+        FilePath workspace = lb.getWorkspace();
+        if (workspace == null) {
+            return null;
+        }
+        return workspace.child(publisher.getReportDir());
     }
+    
+    private File getLastBuildReportDir() {
+        if (project.getLastBuild() == null) {
+            // no clover report links, until there is at least one build
+            return null;
+        }
+        final File reportDir = project.getLastBuild().getRootDir();
+        return reportDir;
+    }
+    
+    private static final Logger LOGGER = Logger.getLogger(CloverProjectAction.class.getName());
 }
