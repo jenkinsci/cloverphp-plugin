@@ -2,7 +2,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form"
          xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
-    <table class="coverage sortable" style="width: 700px;">
+    <table class="coverage sortable" style="width: 800px;">
         <clover:captionLine />
         <j:forEach var="c" items="${it.children}">
             <tr>

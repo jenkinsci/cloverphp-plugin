@@ -3,7 +3,7 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form"
          xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
               
-        <table class="coverage" style="width: 600px;">
+        <table class="coverage" style="width: 800px;">
             <clover:shortCaptionLine />
             <tr>
                 <td>${title}</td>

@@ -201,7 +201,6 @@ public class CloverPublisher extends Recorder {
         if (!workspacePath.endsWith(File.separator)) {
             workspacePath += File.separator;
         }
-        System.out.append("workspacePath: " + workspacePath);
 
         final File cloverXmlReport = getCloverXmlReport(build);
         if (cloverXmlReport.exists()) {

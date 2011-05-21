@@ -1,10 +1,14 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
          xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-    <l:layout xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags" css="/plugin/cloverphp/css/style.css" >
+    <l:layout xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags" css="/plugin/cloverphp/css/style.css" 
+              title="${%Clover PHP Coverage Report}">
         <st:include it="${it.owner}" page="sidepanel.jelly" />
         <l:main-panel>
-            <h1>${%Clover Coverage Report}</h1>
+            <h1>${%Clover PHP Coverage Report}</h1>
+            <clover:breadcrumb />
+
+            <h2>${%Class} ${it.name}</h2>
 
             <j:if test="${it.previousResult != null}">
               <clover:trendGraph />

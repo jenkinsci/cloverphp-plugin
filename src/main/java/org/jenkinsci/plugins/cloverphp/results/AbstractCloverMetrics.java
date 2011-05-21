@@ -14,7 +14,10 @@ import hudson.util.ShiftedCategoryAxis;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
@@ -207,7 +210,34 @@ public abstract class AbstractCloverMetrics {
     public AbstractCloverMetrics getParent() {
         return parent;
     }
+    
+    /**
+     * exposed to jelly. 
+     */
+    public List<AbstractCloverMetrics> getParents() {
+        List<AbstractCloverMetrics> parents = new ArrayList<AbstractCloverMetrics>();
+        AbstractCloverMetrics p = getParent();
+        while (p != null) {
+            parents.add(p);
+            p = p.getParent();
+        }
+        Collections.reverse(parents);
+        return parents;
+    }
 
+    /**
+     * exposed to jelly. 
+     */
+    public String relativeUrl(AbstractCloverMetrics parent) {
+        StringBuilder url = new StringBuilder("..");
+        AbstractCloverMetrics p = getParent();
+        while (p != null && p != parent) {
+            url.append("/..");
+            p = p.getParent();
+        }
+        return url.toString();
+    }
+    
     public void setParent(AbstractCloverMetrics parent) {
         this.parent = parent;
     }
