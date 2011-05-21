@@ -6,9 +6,9 @@ import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
  * Clover Coverage results for a specific class.
  * @author Stephen Connolly
  */
-public class ClassCoverage extends AbstractCloverMetrics {
+public class ClassCoverage extends AbstractClassMetrics {
 
-    public AbstractCloverMetrics getPreviousResult() {
+    public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;

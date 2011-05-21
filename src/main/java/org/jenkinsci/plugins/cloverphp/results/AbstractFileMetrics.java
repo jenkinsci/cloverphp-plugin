@@ -4,7 +4,7 @@ package org.jenkinsci.plugins.cloverphp.results;
  * Clover Coverage results for multiple classes.
  * @author Stephen Connolly
  */
-public abstract class AbstractClassAggregatedMetrics extends AbstractCloverMetrics {
+public abstract class AbstractFileMetrics extends AbstractClassMetrics {
 
     private int classes;
 

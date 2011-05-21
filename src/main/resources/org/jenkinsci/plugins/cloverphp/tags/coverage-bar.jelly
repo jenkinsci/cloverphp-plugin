@@ -22,7 +22,7 @@
     <j:if test="${provider.hasData eq 'true'}">
 
         <div title="${provider.pcUncovered} ${%Not Covered}" style="min-width: 100px;" class="barNegative ">
-            <div title="${provider.pcCovered} ${%Covered}" class="barPositive" style="width: ${provider.pcWidth}"></div>
+            <div title="${provider.pcCovered} ${%Covered}" class="barPositive" style="width: ${provider.pcWidth}">${provider.pcCovered}</div>
         </div>
     </j:if>
 

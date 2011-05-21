@@ -15,7 +15,7 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author Stephen Connolly
  * @author Seiji Sogabe
  */
-public class ProjectCoverage extends AbstractFileAggregatedMetrics {
+public class ProjectCoverage extends AbstractProjectMetrics {
 
     private List<FileCoverage> fileCoverages = new ArrayList<FileCoverage>();
 
@@ -45,7 +45,7 @@ public class ProjectCoverage extends AbstractFileAggregatedMetrics {
         return findFileCoverage(token);
     }
 
-    public AbstractCloverMetrics getPreviousResult() {
+    public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;

@@ -37,9 +37,9 @@ import org.jfree.ui.RectangleInsets;
  * @author Stephen Connolly
  * @author Seiji Sogabe
  */
-public abstract class AbstractCloverMetrics {
+public abstract class AbstractClassMetrics {
 
-    private AbstractCloverMetrics parent;
+    private AbstractClassMetrics parent;
 
     private String name;
 
@@ -207,16 +207,16 @@ public abstract class AbstractCloverMetrics {
         this.owner = owner;
     }
 
-    public AbstractCloverMetrics getParent() {
+    public AbstractClassMetrics getParent() {
         return parent;
     }
     
     /**
      * exposed to jelly. 
      */
-    public List<AbstractCloverMetrics> getParents() {
-        List<AbstractCloverMetrics> parents = new ArrayList<AbstractCloverMetrics>();
-        AbstractCloverMetrics p = getParent();
+    public List<AbstractClassMetrics> getParents() {
+        List<AbstractClassMetrics> parents = new ArrayList<AbstractClassMetrics>();
+        AbstractClassMetrics p = getParent();
         while (p != null) {
             parents.add(p);
             p = p.getParent();
@@ -228,9 +228,9 @@ public abstract class AbstractCloverMetrics {
     /**
      * exposed to jelly. 
      */
-    public String relativeUrl(AbstractCloverMetrics parent) {
+    public String relativeUrl(AbstractClassMetrics parent) {
         StringBuilder url = new StringBuilder("..");
-        AbstractCloverMetrics p = getParent();
+        AbstractClassMetrics p = getParent();
         while (p != null && p != parent) {
             url.append("/..");
             p = p.getParent();
@@ -238,11 +238,11 @@ public abstract class AbstractCloverMetrics {
         return url.toString();
     }
     
-    public void setParent(AbstractCloverMetrics parent) {
+    public void setParent(AbstractClassMetrics parent) {
         this.parent = parent;
     }
 
-    public abstract AbstractCloverMetrics getPreviousResult();
+    public abstract AbstractClassMetrics getPreviousResult();
 
     protected CloverBuildAction getPreviousCloverBuildAction() {
         if (owner == null) {
@@ -271,9 +271,9 @@ public abstract class AbstractCloverMetrics {
         return new GraphImpl(this, t) {
 
             @Override
-            protected DataSetBuilder<String, NumberOnlyBuildLabel> createDataSet(AbstractCloverMetrics metrics) {
+            protected DataSetBuilder<String, NumberOnlyBuildLabel> createDataSet(AbstractClassMetrics metrics) {
                 DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
-                for (AbstractCloverMetrics m = metrics; m != null; m = m.getPreviousResult()) {
+                for (AbstractClassMetrics m = metrics; m != null; m = m.getPreviousResult()) {
                     ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(m.getOwner());
                     dsb.add(m.getMethodCoverage().getPercentageFloat(),
                             Messages.AbstractCloverMetrics_Label_method(), label);
@@ -289,14 +289,14 @@ public abstract class AbstractCloverMetrics {
 
     private abstract class GraphImpl extends Graph {
 
-        private AbstractCloverMetrics metrics;
+        private AbstractClassMetrics metrics;
 
-        public GraphImpl(AbstractCloverMetrics metrics, Calendar timestamp) {
+        public GraphImpl(AbstractClassMetrics metrics, Calendar timestamp) {
             super(timestamp, 500, 200);
             this.metrics = metrics;
         }
 
-        protected abstract DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> createDataSet(AbstractCloverMetrics metrics);
+        protected abstract DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> createDataSet(AbstractClassMetrics metrics);
 
         @Override
         protected JFreeChart createGraph() {

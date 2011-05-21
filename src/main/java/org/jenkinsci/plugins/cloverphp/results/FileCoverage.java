@@ -14,7 +14,7 @@ import org.kohsuke.stapler.StaplerResponse;
  * Clover Coverage results for a specific file.
  * @author Stephen Connolly
  */
-public class FileCoverage extends AbstractClassAggregatedMetrics {
+public class FileCoverage extends AbstractFileMetrics {
 
     private List<ClassCoverage> classCoverages = new ArrayList<ClassCoverage>();
 
@@ -44,7 +44,7 @@ public class FileCoverage extends AbstractClassAggregatedMetrics {
         return null;
     }
 
-    public AbstractCloverMetrics getPreviousResult() {
+    public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;

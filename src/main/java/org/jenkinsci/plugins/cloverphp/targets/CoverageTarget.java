@@ -1,6 +1,6 @@
 package org.jenkinsci.plugins.cloverphp.targets;
 
-import org.jenkinsci.plugins.cloverphp.results.AbstractCloverMetrics;
+import org.jenkinsci.plugins.cloverphp.results.AbstractClassMetrics;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -45,7 +45,7 @@ public class CoverageTarget implements Serializable {
                 && elementCoverage == null;
     }
 
-    public Set<CoverageMetric> getFailingMetrics(AbstractCloverMetrics coverage) {
+    public Set<CoverageMetric> getFailingMetrics(AbstractClassMetrics coverage) {
         Set<CoverageMetric> result = new HashSet<CoverageMetric>();
 
         if (methodCoverage != null && coverage.getMethodCoverage().getPercentage() < methodCoverage) {
@@ -63,7 +63,7 @@ public class CoverageTarget implements Serializable {
         return result;
     }
 
-    public Map<CoverageMetric, Integer> getRangeScores(CoverageTarget min, AbstractCloverMetrics coverage) {
+    public Map<CoverageMetric, Integer> getRangeScores(CoverageTarget min, AbstractClassMetrics coverage) {
         Integer j;
         Map<CoverageMetric, Integer> result = new HashMap<CoverageMetric, Integer>();
 
