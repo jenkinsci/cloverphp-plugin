@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.cloverphp;
 
+import java.util.List;
 import org.junit.Test;
 import org.jenkinsci.plugins.cloverphp.results.ClassCoverage;
 import org.jenkinsci.plugins.cloverphp.results.FileCoverage;
@@ -29,6 +30,42 @@ public class CloverCoverageParserTest {
         ProjectCoverage pc = new ProjectCoverage();
         ProjectCoverage result = CloverCoverageParser.trimPaths(pc, null);
         assertEquals(result, pc);
+    }
+    
+    @Test 
+    public void testTrimPaths1() {
+        String prefix = "org\\jenkinsci";
+        FileCoverage fc = new FileCoverage();
+        fc.setName(prefix + "\\plugins");
+        
+        ProjectCoverage pc = new ProjectCoverage();
+        pc.addFileCoverage(fc);
+        
+        ProjectCoverage result = CloverCoverageParser.trimPaths(pc, prefix);
+        assertNotNull(result);
+        List<FileCoverage> lf = result.getChildren();
+        assertNotNull(lf);
+        assertEquals(1, lf.size());
+        FileCoverage f = lf.get(0);
+        assertEquals("/plugins", f.getName());
+    }
+
+    @Test 
+    public void testTrimPaths2() {
+        String prefix = "org\\jenkinsci";
+        FileCoverage fc = new FileCoverage();
+        fc.setName("unmatch");
+        
+        ProjectCoverage pc = new ProjectCoverage();
+        pc.addFileCoverage(fc);
+        
+        ProjectCoverage result = CloverCoverageParser.trimPaths(pc, prefix);
+        assertNotNull(result);
+        List<FileCoverage> lf = result.getChildren();
+        assertNotNull(lf);
+        assertEquals(1, lf.size());
+        FileCoverage f = lf.get(0);
+        assertEquals("unmatch", f.getName());
     }
     
     @Test(expected = NullPointerException.class)

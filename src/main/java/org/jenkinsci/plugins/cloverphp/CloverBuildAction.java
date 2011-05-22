@@ -151,7 +151,7 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
             return null;
         }
     }
-
+    
     private static final Logger LOGGER = Logger.getLogger(CloverBuildAction.class.getName());
 
     public static CloverBuildAction load(AbstractBuild<?, ?> build, String workspacePath, ProjectCoverage result,
