@@ -112,6 +112,21 @@ public class AbstractClassMetricsTest {
     }
 
     /**
+     * Test of relativeUrl method, of class AbstractClassMetrics.
+     */
+    @Test
+    public void testRelativeUrl_NullParent() {
+        // p -> p1 -> null
+        AbstractClassMetrics p1 = mock(AbstractClassMetrics.class);
+        when(p1.getParent()).thenReturn(null);
+        AbstractClassMetrics acm = spy(target);
+        doReturn(p1).when(acm).getParent();
+
+        AbstractClassMetrics p = mock(AbstractClassMetrics.class);
+        assertEquals("../..", acm.relativeUrl(p));
+    }
+    
+    /**
      * Test of getPreviousCloverBuildAction method, of class AbstractClassMetrics.
      */
     @Test
@@ -135,7 +150,7 @@ public class AbstractClassMetricsTest {
      * Test of getPreviousCloverBuildAction method, of class AbstractClassMetrics.
      */
     @Test
-    public void testGetPreviousCloverBuildAction_ActionNull() {
+    public void testGetPreviousCloverBuildAction_ActionNotNull() {
         CloverBuildAction cba = mock(CloverBuildAction.class);
         Run<?, ?> r = mock(Run.class);
         when(r.getAction(CloverBuildAction.class)).thenReturn(cba);
@@ -144,4 +159,43 @@ public class AbstractClassMetricsTest {
         target.setOwner(b);
         assertEquals(cba, target.getPreviousCloverBuildAction());
     }
+
+    /**
+     * Test of getPreviousCloverBuildAction method, of class AbstractClassMetrics.
+     */
+    @Test
+    public void testGetPreviousCloverBuildAction_ActionNull() {
+        CloverBuildAction cba2 = null;
+        Run prebuild2 = mock(Run.class);
+        when(prebuild2.getAction(CloverBuildAction.class)).thenReturn(cba2);
+        
+        CloverBuildAction cba = null;
+        Run prebuild = mock(Run.class);
+        when(prebuild.getAction(CloverBuildAction.class)).thenReturn(cba);
+        
+        when(prebuild.getPreviousBuild()).thenReturn(prebuild2);
+        
+        AbstractBuild b = mock(AbstractBuild.class);
+        when(b.getPreviousBuild()).thenReturn(prebuild);
+        target.setOwner(b);
+        assertEquals(cba2, target.getPreviousCloverBuildAction());
+    }
+
+    /**
+     * Test of getPreviousCloverBuildAction method, of class AbstractClassMetrics.
+     */
+    @Test
+    public void testGetPreviousCloverBuildAction_Pre2BuildNull() {
+        CloverBuildAction cba = null;
+        Run prebuild = mock(Run.class);
+        when(prebuild.getAction(CloverBuildAction.class)).thenReturn(cba);
+        
+        when(prebuild.getPreviousBuild()).thenReturn(null);
+        
+        AbstractBuild b = mock(AbstractBuild.class);
+        when(b.getPreviousBuild()).thenReturn(prebuild);
+        target.setOwner(b);
+        assertEquals(cba, target.getPreviousCloverBuildAction());
+    }
+    
 }

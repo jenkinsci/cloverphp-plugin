@@ -58,7 +58,7 @@ public class RatioTest {
     public void testGetPercentageStr_undefined() {
         Ratio ratio = Ratio.create(1.0f, 0.0f);
         assertEquals("-", ratio.getPercentageStr());
-        ratio = Ratio.create(1.0f, -5.0f);
+        ratio = Ratio.create(1.0f, -50.0f);
         assertEquals("-", ratio.getPercentageStr());
     }
 
