@@ -165,6 +165,10 @@
             <id>b.d.j-public</id>
             <url>http://bacons.ddo.jp/maven2/</url>
         </repository>
+        <repository>
+            <id>powermock-repo</id>
+            <url>http://powermock.googlecode.com/svn/repo/</url>
+        </repository>
     </repositories>
 
 </project>
