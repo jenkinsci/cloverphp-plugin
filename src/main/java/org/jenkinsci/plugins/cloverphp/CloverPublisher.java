@@ -4,10 +4,12 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
 import hudson.Util;
+import hudson.matrix.MatrixProject;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.BuildListener;
+import hudson.model.FreeStyleProject;
 import hudson.model.Project;
 import hudson.model.Result;
 import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
@@ -337,7 +339,7 @@ public class CloverPublisher extends Recorder {
 
         @Override
         public boolean isApplicable(Class<? extends AbstractProject> jobType) {
-            return true;
+            return FreeStyleProject.class.equals(jobType) || MatrixProject.class.equals(jobType);
         }
         
         public FormValidation doRequiredCheck(@QueryParameter String value) {
