@@ -143,7 +143,7 @@ public class FileCoverageTest {
         doReturn(cba).when(coverage).getPreviousCloverBuildAction();
         doReturn("org").when(coverage).getURLSafeName();
 
-        AbstractClassMetrics result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousResult();
 
         assertNotNull(result);
         assertEquals(fc, result);
@@ -161,7 +161,7 @@ public class FileCoverageTest {
         doReturn(cba).when(coverage).getPreviousCloverBuildAction();
         doReturn("org").when(coverage).getURLSafeName();
 
-        AbstractClassMetrics result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousResult();
 
         assertNull(result);
     }
@@ -173,7 +173,7 @@ public class FileCoverageTest {
     public void testGetPreviousResult_NoAction() {
         FileCoverage coverage = spy(target);
         doReturn(null).when(coverage).getPreviousCloverBuildAction();
-        AbstractClassMetrics result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousResult();
         assertNull(result);
     }
     

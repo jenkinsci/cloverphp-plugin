@@ -3,22 +3,20 @@ package org.jenkinsci.plugins.cloverphp.results;
 import hudson.Util;
 import hudson.model.AbstractBuild;
 import hudson.model.Run;
-import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
-import org.jenkinsci.plugins.cloverphp.Ratio;
 import hudson.util.ChartUtil;
 import hudson.util.ChartUtil.NumberOnlyBuildLabel;
 import hudson.util.ColorPalette;
 import hudson.util.DataSetBuilder;
 import hudson.util.Graph;
 import hudson.util.ShiftedCategoryAxis;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
+import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
+import org.jenkinsci.plugins.cloverphp.Ratio;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
@@ -33,13 +31,10 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 
 /**
- * Abstract Clover Coverage results.
- * @author Stephen Connolly
- * @author Seiji Sogabe
+ *
+ * @author sogabe
  */
-public abstract class AbstractClassMetrics {
-
-    private AbstractClassMetrics parent;
+public abstract class BaseCoverage {
 
     private String name;
 
@@ -56,6 +51,38 @@ public abstract class AbstractClassMetrics {
     private int coveredelements;
 
     private AbstractBuild owner = null;
+
+    private BaseCoverage parent;
+
+    public BaseCoverage getParent() {
+        return parent;
+    }
+
+    public void setParent(BaseCoverage parent) {
+        this.parent = parent;
+    }
+
+    /**
+     * exposed to jelly. 
+     */
+    public List<BaseCoverage> getParents() {
+        List<BaseCoverage> parents = new ArrayList<BaseCoverage>();
+        BaseCoverage p = getParent();
+        while (p != null) {
+            parents.add(p);
+            p = p.getParent();
+        }
+        Collections.reverse(parents);
+        return parents;
+    }
+    
+    public AbstractBuild getOwner() {
+        return owner;
+    }
+
+    public void setOwner(AbstractBuild owner) {
+        this.owner = owner;
+    }
 
     public Ratio getMethodCoverage() {
         return Ratio.create(coveredmethods, methods);
@@ -199,51 +226,6 @@ public abstract class AbstractClassMetrics {
         this.name = name;
     }
 
-    public AbstractBuild getOwner() {
-        return owner;
-    }
-
-    public void setOwner(AbstractBuild owner) {
-        this.owner = owner;
-    }
-
-    public AbstractClassMetrics getParent() {
-        return parent;
-    }
-    
-    /**
-     * exposed to jelly. 
-     */
-    public List<AbstractClassMetrics> getParents() {
-        List<AbstractClassMetrics> parents = new ArrayList<AbstractClassMetrics>();
-        AbstractClassMetrics p = getParent();
-        while (p != null) {
-            parents.add(p);
-            p = p.getParent();
-        }
-        Collections.reverse(parents);
-        return parents;
-    }
-
-    /**
-     * exposed to jelly. 
-     */
-    public String relativeUrl(AbstractClassMetrics parent) {
-        StringBuilder url = new StringBuilder("..");
-        AbstractClassMetrics p = getParent();
-        while (p != null && p != parent) {
-            url.append("/..");
-            p = p.getParent();
-        }
-        return url.toString();
-    }
-    
-    public void setParent(AbstractClassMetrics parent) {
-        this.parent = parent;
-    }
-
-    public abstract AbstractClassMetrics getPreviousResult();
-
     protected CloverBuildAction getPreviousCloverBuildAction() {
         if (owner == null) {
             return null;
@@ -271,9 +253,9 @@ public abstract class AbstractClassMetrics {
         return new GraphImpl(this, t) {
 
             @Override
-            protected DataSetBuilder<String, NumberOnlyBuildLabel> createDataSet(AbstractClassMetrics metrics) {
+            protected DataSetBuilder<String, NumberOnlyBuildLabel> createDataSet(BaseCoverage metrics) {
                 DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
-                for (AbstractClassMetrics m = metrics; m != null; m = m.getPreviousResult()) {
+                for (BaseCoverage m = metrics; m != null; m = m.getPreviousResult()) {
                     ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(m.getOwner());
                     dsb.add(m.getMethodCoverage().getPercentageFloat(),
                             Messages.AbstractCloverMetrics_Label_method(), label);
@@ -286,21 +268,20 @@ public abstract class AbstractClassMetrics {
             }
         };
     }
-
     private abstract class GraphImpl extends Graph {
 
-        private AbstractClassMetrics metrics;
+        private BaseCoverage coverage;
 
-        public GraphImpl(AbstractClassMetrics metrics, Calendar timestamp) {
+        public GraphImpl(BaseCoverage coverage, Calendar timestamp) {
             super(timestamp, 500, 200);
-            this.metrics = metrics;
+            this.coverage = coverage;
         }
 
-        protected abstract DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> createDataSet(AbstractClassMetrics metrics);
+        protected abstract DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> createDataSet(BaseCoverage coverage);
 
         @Override
         protected JFreeChart createGraph() {
-            final CategoryDataset dataset = createDataSet(metrics).build();
+            final CategoryDataset dataset = createDataSet(coverage).build();
 
             final JFreeChart chart = ChartFactory.createLineChart(
                     null, // chart title
@@ -350,4 +331,5 @@ public abstract class AbstractClassMetrics {
             return chart;
         }
     }
+    public abstract BaseCoverage getPreviousResult();
 }

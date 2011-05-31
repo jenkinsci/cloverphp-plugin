@@ -49,7 +49,7 @@ public class ClassCoverageTest {
         ClassCoverage mock = spy(target);
         doReturn(cba).when(mock).getPreviousCloverBuildAction();
         
-        AbstractClassMetrics result = mock.getPreviousResult();
+        BaseCoverage result = mock.getPreviousResult();
         assertNull(result);
     }
 
@@ -71,7 +71,7 @@ public class ClassCoverageTest {
         doReturn(fc).when(mock).getParent();
         doReturn(cba).when(mock).getPreviousCloverBuildAction();
         
-        AbstractClassMetrics result = mock.getPreviousResult();
+        BaseCoverage result = mock.getPreviousResult();
         assertNull(result);
     }
 
@@ -97,7 +97,7 @@ public class ClassCoverageTest {
         doReturn(fc).when(mock).getParent();
         doReturn(cba).when(mock).getPreviousCloverBuildAction();
         
-        AbstractClassMetrics result = mock.getPreviousResult();
+        BaseCoverage result = mock.getPreviousResult();
         assertNotNull(result);
     }
     

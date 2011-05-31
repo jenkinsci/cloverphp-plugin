@@ -116,7 +116,7 @@ public class ProjectCoverageTest {
         ProjectCoverage coverage = spy(target);
         doReturn(cba).when(coverage).getPreviousCloverBuildAction();
 
-        AbstractClassMetrics result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousResult();
 
         assertNotNull(result);
         assertEquals(p, result);
@@ -130,7 +130,7 @@ public class ProjectCoverageTest {
         ProjectCoverage coverage = spy(target);
         doReturn(null).when(coverage).getPreviousCloverBuildAction();
 
-        AbstractClassMetrics result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousResult();
 
         assertNull(result);
     }

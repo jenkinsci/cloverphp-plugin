@@ -15,10 +15,50 @@ import org.kohsuke.stapler.StaplerResponse;
  * @author Stephen Connolly
  * @author Seiji Sogabe
  */
-public class ProjectCoverage extends AbstractProjectMetrics {
+public class ProjectCoverage extends BaseCoverage {
 
+    private int files;
+
+    private int classes;
+
+    private int loc;
+
+    private int ncloc;
+    
     private List<FileCoverage> fileCoverages = new ArrayList<FileCoverage>();
 
+    public int getClasses() {
+        return classes;
+    }
+
+    public void setClasses(int classes) {
+        this.classes = classes;
+    }
+
+    public int getLoc() {
+        return loc;
+    }
+
+    public void setLoc(int loc) {
+        this.loc = loc;
+    }
+
+    public int getNcloc() {
+        return ncloc;
+    }
+
+    public void setNcloc(int ncloc) {
+        this.ncloc = ncloc;
+    }
+
+    public int getFiles() {
+        return files;
+    }
+
+    public void setFiles(int files) {
+        this.files = files;
+    }
+    
     public List<FileCoverage> getChildren() {
         return getFileCoverages();
     }
@@ -45,7 +85,8 @@ public class ProjectCoverage extends AbstractProjectMetrics {
         return findFileCoverage(token);
     }
 
-    public AbstractClassMetrics getPreviousResult() {
+    @Override
+    public ProjectCoverage getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;

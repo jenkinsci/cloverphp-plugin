@@ -14,10 +14,40 @@ import org.kohsuke.stapler.StaplerResponse;
  * Clover Coverage results for a specific file.
  * @author Stephen Connolly
  */
-public class FileCoverage extends AbstractFileMetrics {
+public class FileCoverage extends BaseCoverage {
+
+    private int classes;
+
+    private int loc;
+
+    private int ncloc;
 
     private List<ClassCoverage> classCoverages = new ArrayList<ClassCoverage>();
 
+    public int getClasses() {
+        return classes;
+    }
+
+    public void setClasses(int classes) {
+        this.classes = classes;
+    }
+
+    public int getLoc() {
+        return loc;
+    }
+
+    public void setLoc(int loc) {
+        this.loc = loc;
+    }
+
+    public int getNcloc() {
+        return ncloc;
+    }
+
+    public void setNcloc(int ncloc) {
+        this.ncloc = ncloc;
+    }
+    
     public List<ClassCoverage> getChildren() {
         return getClassCoverages();
     }
@@ -44,7 +74,7 @@ public class FileCoverage extends AbstractFileMetrics {
         return null;
     }
 
-    public AbstractClassMetrics getPreviousResult() {
+    public FileCoverage getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;
@@ -58,7 +88,7 @@ public class FileCoverage extends AbstractFileMetrics {
 
     @Override
     public void setOwner(AbstractBuild owner) {
-        super.setOwner(owner);    //To change body of overridden methods use File | Settings | File Templates.
+        super.setOwner(owner);    
         for (ClassCoverage classCoverage : classCoverages) {
             classCoverage.setOwner(owner);
         }
