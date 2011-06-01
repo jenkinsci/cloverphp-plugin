@@ -38,7 +38,7 @@ public class ProjectCoverageTest {
     @Test
     public void testGetChildren() {
         FileCoverage fc = mock(FileCoverage.class);
-        target.addFileCoverage(fc);
+        target.addChild(fc);
         List<FileCoverage> list = target.getChildren();
         assertNotNull(list);
         assertEquals(1, list.size());
@@ -46,43 +46,29 @@ public class ProjectCoverageTest {
     }
 
     /**
-     * Test of addFileCoverage method, of class ProjectCoverage.
+     * Test of addChild method, of class ProjectCoverage.
      */
     @Test
-    public void testAddFileCoverage() {
+    public void testAddChild() {
         FileCoverage fc = mock(FileCoverage.class);
-        target.addFileCoverage(fc);
+        target.addChild(fc);
     }
 
     /**
-     * Test of getFileCoverages method, of class ProjectCoverage.
+     * Test of findChild method, of class ProjectCoverage.
      */
     @Test
-    public void testGetFileCoverages() {
-        FileCoverage fc1 = mock(FileCoverage.class);
-        FileCoverage fc2 = mock(FileCoverage.class);
-        target.addFileCoverage(fc1);
-        target.addFileCoverage(fc1);
-        List<FileCoverage> list = target.getFileCoverages();
-        assertNotNull(list);
-        assertEquals(2, list.size());
-    }
-
-    /**
-     * Test of findFileCoverage method, of class ProjectCoverage.
-     */
-    @Test
-    public void testFindFileCoverage() {
+    public void testFindChild() {
         FileCoverage fc1 = mock(FileCoverage.class);
         when(fc1.getURLSafeName()).thenReturn("org");
         FileCoverage fc2 = mock(FileCoverage.class);
         when(fc2.getURLSafeName()).thenReturn("org.jenkinsci");
 
-        target.addFileCoverage(fc1);
-        target.addFileCoverage(fc2);
+        target.addChild(fc1);
+        target.addChild(fc2);
 
-        assertEquals(fc2, target.findFileCoverage("org.jenkinsci"));
-        assertNull(target.findFileCoverage("null"));
+        assertEquals(fc2, target.findChild("org.jenkinsci"));
+        assertNull(target.findChild("null"));
     }
 
     /**
@@ -98,8 +84,8 @@ public class ProjectCoverageTest {
         FileCoverage fc2 = mock(FileCoverage.class);
         when(fc2.getURLSafeName()).thenReturn("org.jenkinsci");
 
-        target.addFileCoverage(fc1);
-        target.addFileCoverage(fc2);
+        target.addChild(fc1);
+        target.addChild(fc2);
 
         assertEquals(fc2, target.getDynamic("org.jenkinsci", req, res));
     }
@@ -144,7 +130,7 @@ public class ProjectCoverageTest {
         FileCoverage fc1 = spy(new FileCoverage());
         doReturn("org").when(fc1).getURLSafeName();
 
-        target.addFileCoverage(fc1);
+        target.addChild(fc1);
         target.setOwner(owner);
 
         assertEquals(owner, fc1.getOwner());

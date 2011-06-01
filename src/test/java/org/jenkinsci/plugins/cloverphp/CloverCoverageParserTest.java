@@ -39,7 +39,7 @@ public class CloverCoverageParserTest {
         fc.setName(prefix + "\\plugins");
         
         ProjectCoverage pc = new ProjectCoverage();
-        pc.addFileCoverage(fc);
+        pc.addChild(fc);
         
         ProjectCoverage result = CloverCoverageParser.trimPaths(pc, prefix);
         assertNotNull(result);
@@ -57,7 +57,7 @@ public class CloverCoverageParserTest {
         fc.setName("unmatch");
         
         ProjectCoverage pc = new ProjectCoverage();
-        pc.addFileCoverage(fc);
+        pc.addChild(fc);
         
         ProjectCoverage result = CloverCoverageParser.trimPaths(pc, prefix);
         assertNotNull(result);
@@ -95,8 +95,8 @@ public class CloverCoverageParserTest {
         assertEquals(4, result.getElements());
         assertEquals(2, result.getCoveredelements());
         
-        assertEquals(1, result.getFileCoverages().size());
-        FileCoverage fileResult = result.getFileCoverages().get(0);
+        assertEquals(1, result.getChildren().size());
+        FileCoverage fileResult = result.getChildren().get(0);
         assertEquals("/var/lib/hudson/jobs/php-sample/workspace/phpsample/src/StringUtil.php", fileResult.getName());
         assertEquals(14, fileResult.getNcloc());        
         assertEquals(16, fileResult.getLoc());
@@ -109,8 +109,8 @@ public class CloverCoverageParserTest {
         assertEquals(2, fileResult.getCoveredelements());
         
         
-        assertEquals(1, fileResult.getClassCoverages().size());
-        ClassCoverage classResult = fileResult.getClassCoverages().get(0);
+        assertEquals(1, fileResult.getChildren().size());
+        ClassCoverage classResult = fileResult.getChildren().get(0);
         assertEquals("StringUtil", classResult.getName());
         assertEquals(2, classResult.getMethods());
         assertEquals(1, classResult.getCoveredmethods());

@@ -31,7 +31,7 @@ public final class CloverCoverageParser {
         if (pathPrefix == null) {
             return result;
         }
-        for (FileCoverage f : result.getFileCoverages()) {
+        for (FileCoverage f : result.getChildren()) {
             if (f.getName().startsWith(pathPrefix)) {
                 f.setName(f.getName().substring(pathPrefix.length()));
             }
@@ -74,12 +74,12 @@ public final class CloverCoverageParser {
         digester.addObjectCreate("coverage/project/file", FileCoverage.class);
         digester.addSetProperties("coverage/project/file");
         digester.addSetProperties("coverage/project/file/metrics");
-        digester.addSetNext("coverage/project/file", "addFileCoverage", FileCoverage.class.getName());
+        digester.addSetNext("coverage/project/file", "addChild", FileCoverage.class.getName());
 
         digester.addObjectCreate("coverage/project/file/class", ClassCoverage.class);
         digester.addSetProperties("coverage/project/file/class");
         digester.addSetProperties("coverage/project/file/class/metrics");
-        digester.addSetNext("coverage/project/file/class", "addClassCoverage", ClassCoverage.class.getName());
+        digester.addSetNext("coverage/project/file/class", "addChild", ClassCoverage.class.getName());
 
         try {
             return (ProjectCoverage) digester.parse(in);

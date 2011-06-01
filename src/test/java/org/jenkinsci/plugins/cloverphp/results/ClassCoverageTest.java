@@ -62,7 +62,7 @@ public class ClassCoverageTest {
         when(fc.getURLSafeName()).thenReturn("anyString");
         
         ProjectCoverage pc = mock(ProjectCoverage.class);
-        when(pc.findFileCoverage(anyString())).thenReturn(null);
+        when(pc.findChild(anyString())).thenReturn(null);
         
         CloverBuildAction cba = mock(CloverBuildAction.class);
         when(cba.getResult()).thenReturn(pc);
@@ -84,10 +84,10 @@ public class ClassCoverageTest {
         
         FileCoverage fc = mock(FileCoverage.class);
         when(fc.getURLSafeName()).thenReturn("anyString");
-        when(fc.findClassCoverage(anyString())).thenReturn(cc);
+        when(fc.findChild(anyString())).thenReturn(cc);
         
         ProjectCoverage pc = mock(ProjectCoverage.class);
-        when(pc.findFileCoverage(anyString())).thenReturn(fc);
+        when(pc.findChild(anyString())).thenReturn(fc);
         
         CloverBuildAction cba = mock(CloverBuildAction.class);
         when(cba.getResult()).thenReturn(pc);

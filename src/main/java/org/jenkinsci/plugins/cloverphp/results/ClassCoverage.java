@@ -11,7 +11,7 @@ public class ClassCoverage extends BaseCoverage {
     /**
      * exposed to jelly. 
      */
-    public String relativeUrl(FileCoverage parent) {
+    public String relativeUrl(BaseCoverage parent) {
         StringBuilder url = new StringBuilder("..");
         BaseCoverage p = getParent();
         while (p != null && p != parent) {
@@ -31,10 +31,10 @@ public class ClassCoverage extends BaseCoverage {
         if (pc == null) {
             return null;
         }
-        FileCoverage fc = pc.findFileCoverage(getParent().getURLSafeName());
+        FileCoverage fc = pc.findChild(getParent().getURLSafeName());
         if (fc == null) {
             return null;
         }
-        return fc.findClassCoverage(getURLSafeName());
+        return fc.findChild(getURLSafeName());
     }
 }

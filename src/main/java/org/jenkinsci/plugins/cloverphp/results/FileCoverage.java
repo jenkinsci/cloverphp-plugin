@@ -49,29 +49,25 @@ public class FileCoverage extends BaseCoverage {
     }
     
     public List<ClassCoverage> getChildren() {
-        return getClassCoverages();
-    }
-
-    public ClassCoverage getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
-        return findClassCoverage(token);
-    }
-
-    public boolean addClassCoverage(ClassCoverage result) {
-        result.setParent(this);
-        return classCoverages.add(result);
-    }
-
-    public List<ClassCoverage> getClassCoverages() {
         return classCoverages;
     }
 
-    public ClassCoverage findClassCoverage(String token) {
+    public boolean addChild(ClassCoverage child) {
+        child.setParent(this);
+        return classCoverages.add(child);
+    }
+
+    public ClassCoverage findChild(String token) {
         for (ClassCoverage i : classCoverages) {
             if (token.equals(i.getURLSafeName())) {
                 return i;
             }
         }
         return null;
+    }
+
+    public ClassCoverage getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
+        return findChild(token);
     }
 
     public FileCoverage getPreviousResult() {
@@ -83,9 +79,22 @@ public class FileCoverage extends BaseCoverage {
         if (projectCoverage == null) {
             return null;
         }
-        return projectCoverage.findFileCoverage(getURLSafeName());
+        return projectCoverage.findChild(getURLSafeName());
     }
 
+    /**
+     * exposed to jelly. 
+     */
+    public String relativeUrl(BaseCoverage parent) {
+        StringBuilder url = new StringBuilder("..");
+        BaseCoverage p = getParent();
+        while (p != null && p != parent) {
+            url.append("/..");
+            p = p.getParent();
+        }
+        return url.toString();
+    }
+    
     @Override
     public void setOwner(AbstractBuild owner) {
         super.setOwner(owner);    

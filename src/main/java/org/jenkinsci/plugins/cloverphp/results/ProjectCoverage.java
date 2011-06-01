@@ -60,19 +60,15 @@ public class ProjectCoverage extends BaseCoverage {
     }
     
     public List<FileCoverage> getChildren() {
-        return getFileCoverages();
-    }
-
-    public boolean addFileCoverage(FileCoverage result) {
-        result.setParent(this);
-        return fileCoverages.add(result);
-    }
-
-    public List<FileCoverage> getFileCoverages() {
         return fileCoverages;
     }
 
-    public FileCoverage findFileCoverage(String token) {
+    public boolean addChild(FileCoverage child) {
+        child.setParent(this);
+        return fileCoverages.add(child);
+    }
+
+    public FileCoverage findChild(String token) {
         for (FileCoverage i : fileCoverages) {
             if (token.equals(i.getURLSafeName())) {
                 return i;
@@ -82,7 +78,7 @@ public class ProjectCoverage extends BaseCoverage {
     }
 
     public FileCoverage getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
-        return findFileCoverage(token);
+        return findChild(token);
     }
 
     @Override

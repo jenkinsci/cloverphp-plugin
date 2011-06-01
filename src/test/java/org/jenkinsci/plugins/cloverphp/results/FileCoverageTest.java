@@ -38,9 +38,9 @@ public class FileCoverageTest {
     @Test
     public void testGetChildren() {
         ClassCoverage cc1 = new ClassCoverage();
-        target.addClassCoverage(cc1);
+        target.addChild(cc1);
         ClassCoverage cc2 = new ClassCoverage();
-        target.addClassCoverage(cc2);
+        target.addChild(cc2);
         List<ClassCoverage> list = target.getChildren();
         assertNotNull(list);
         assertEquals(2, list.size());
@@ -61,69 +61,53 @@ public class FileCoverageTest {
         ClassCoverage cc2 = mock(ClassCoverage.class);
         when(cc2.getURLSafeName()).thenReturn("org.jenkinsci");
 
-        target.addClassCoverage(cc1);
-        target.addClassCoverage(cc2);
+        target.addChild(cc1);
+        target.addChild(cc2);
 
         assertEquals(cc2, target.getDynamic("org.jenkinsci", req, res));
     }
 
     /**
-     * Test of addClassCoverage method, of class FileCoverage.
+     * Test of addChild method, of class FileCoverage.
      */
     @Test
-    public void testAddClassCoverage() {
+    public void testAddChild() {
         ClassCoverage cc = new ClassCoverage();
-        target.addClassCoverage(cc);
+        target.addChild(cc);
         assertEquals(target, cc.getParent());
     }
 
     /**
-     * Test of getClassCoverages method, of class FileCoverage.
+     * Test of findChild method, of class FileCoverage.
      */
     @Test
-    public void testGetClassCoverages() {
-        ClassCoverage cc1 = new ClassCoverage();
-        target.addClassCoverage(cc1);
-        ClassCoverage cc2 = new ClassCoverage();
-        target.addClassCoverage(cc2);
-        List<ClassCoverage> list = target.getClassCoverages();
-        assertNotNull(list);
-        assertEquals(2, list.size());
-        assertTrue(list.contains(cc1));
-        assertTrue(list.contains(cc2));
-    }
-
-    /**
-     * Test of findClassCoverage method, of class FileCoverage.
-     */
-    @Test
-    public void testFindClassCoverage() {
+    public void testFindChild() {
         ClassCoverage cc1 = spy(new ClassCoverage());
         doReturn("org").when(cc1).getURLSafeName();
         ClassCoverage cc2 = spy(new ClassCoverage());
         doReturn("org.jenkinsci").when(cc2).getURLSafeName();
-        target.addClassCoverage(cc1);
-        target.addClassCoverage(cc2);
+        target.addChild(cc1);
+        target.addChild(cc2);
         
-        ClassCoverage result = target.findClassCoverage("org.jenkinsci");
+        ClassCoverage result = target.findChild("org.jenkinsci");
         
         assertNotNull(result);
         assertEquals(cc2, result);
     }
 
     /**
-     * Test of findClassCoverage method, of class FileCoverage.
+     * Test of findChild method, of class FileCoverage.
      */
     @Test
-    public void testFindClassCoverage_NotFound() {
+    public void testFindChild_NotFound() {
         ClassCoverage cc1 = spy(new ClassCoverage());
         doReturn("org").when(cc1).getURLSafeName();
         ClassCoverage cc2 = spy(new ClassCoverage());
         doReturn("org.jenkinsci").when(cc2).getURLSafeName();
-        target.addClassCoverage(cc1);
-        target.addClassCoverage(cc2);
+        target.addChild(cc1);
+        target.addChild(cc2);
         
-        ClassCoverage result = target.findClassCoverage("org.jenkinsci.plugins");
+        ClassCoverage result = target.findChild("org.jenkinsci.plugins");
         
         assertNull(result);
     }
@@ -136,7 +120,7 @@ public class FileCoverageTest {
         CloverBuildAction cba = mock(CloverBuildAction.class);
         ProjectCoverage pc = mock(ProjectCoverage.class);
         FileCoverage fc = new FileCoverage();
-        when(pc.findFileCoverage(anyString())).thenReturn(fc);
+        when(pc.findChild(anyString())).thenReturn(fc);
         when(cba.getResult()).thenReturn(pc);
 
         FileCoverage coverage = spy(target);
@@ -186,7 +170,7 @@ public class FileCoverageTest {
         ClassCoverage cc = spy(new ClassCoverage());
         doReturn("org").when(cc).getURLSafeName();
 
-        target.addClassCoverage(cc);
+        target.addChild(cc);
         target.setOwner(owner);
 
         assertEquals(owner, cc.getOwner());
