@@ -59,9 +59,9 @@ public class CloverPublisher extends Recorder {
      */
     @DataBoundConstructor
     public CloverPublisher(String xmlLocation, String publishHtmlReport, String reportDir, boolean disableArchiving) {
-        this.publishHtmlReport = publishHtmlReport != null;
-        this.reportDir = reportDir;
-        this.xmlLocation = xmlLocation;
+        this.xmlLocation = Util.fixEmptyAndTrim(xmlLocation);
+        this.publishHtmlReport = Util.fixEmptyAndTrim(publishHtmlReport) != null;
+        this.reportDir = Util.fixEmptyAndTrim(reportDir);
         this.disableArchiving = disableArchiving;
         this.healthyTarget = new CoverageTarget();
         this.unhealthyTarget = new CoverageTarget();
@@ -326,6 +326,12 @@ public class CloverPublisher extends Recorder {
         @Override
         public CloverPublisher newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             CloverPublisher instance = req.bindParameters(CloverPublisher.class, "clover.");
+            if (instance.getXmlLocation() == null) {
+                throw new FormException(Messages.CloverPublisher_xmlLocation_required(), "xmlLocation");
+            } 
+            if (instance.isPublishHtmlReport() && instance.getReportDir() == null) {
+                throw new FormException(Messages.CloverPublisher_reportDir_required(), "reportDir");
+            }
             req.bindParameters(instance.failingTarget, "cloverFailingTarget.");
             req.bindParameters(instance.healthyTarget, "cloverHealthyTarget.");
             req.bindParameters(instance.unhealthyTarget, "cloverUnhealthyTarget.");
