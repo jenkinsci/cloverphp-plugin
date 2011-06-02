@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.cloverphp;
 
+import org.jenkinsci.plugins.cloverphp.results.BaseCoverage;
 import java.util.List;
 import org.junit.Test;
 import org.jenkinsci.plugins.cloverphp.results.ClassCoverage;
@@ -43,10 +44,10 @@ public class CloverCoverageParserTest {
         
         ProjectCoverage result = CloverCoverageParser.trimPaths(pc, prefix);
         assertNotNull(result);
-        List<FileCoverage> lf = result.getChildren();
+        List<BaseCoverage> lf = result.getChildren();
         assertNotNull(lf);
         assertEquals(1, lf.size());
-        FileCoverage f = lf.get(0);
+        BaseCoverage f = lf.get(0);
         assertEquals("/plugins", f.getName());
     }
 
@@ -61,10 +62,10 @@ public class CloverCoverageParserTest {
         
         ProjectCoverage result = CloverCoverageParser.trimPaths(pc, prefix);
         assertNotNull(result);
-        List<FileCoverage> lf = result.getChildren();
+        List<BaseCoverage> lf = result.getChildren();
         assertNotNull(lf);
         assertEquals(1, lf.size());
-        FileCoverage f = lf.get(0);
+        BaseCoverage f = lf.get(0);
         assertEquals("unmatch", f.getName());
     }
     
@@ -96,7 +97,7 @@ public class CloverCoverageParserTest {
         assertEquals(2, result.getCoveredelements());
         
         assertEquals(1, result.getChildren().size());
-        FileCoverage fileResult = result.getChildren().get(0);
+        FileCoverage fileResult = (FileCoverage) result.getChildren().get(0);
         assertEquals("/var/lib/hudson/jobs/php-sample/workspace/phpsample/src/StringUtil.php", fileResult.getName());
         assertEquals(14, fileResult.getNcloc());        
         assertEquals(16, fileResult.getLoc());
@@ -110,7 +111,7 @@ public class CloverCoverageParserTest {
         
         
         assertEquals(1, fileResult.getChildren().size());
-        ClassCoverage classResult = fileResult.getChildren().get(0);
+        ClassCoverage classResult = (ClassCoverage) fileResult.getChildren().get(0);
         assertEquals("StringUtil", classResult.getName());
         assertEquals(2, classResult.getMethods());
         assertEquals(1, classResult.getCoveredmethods());

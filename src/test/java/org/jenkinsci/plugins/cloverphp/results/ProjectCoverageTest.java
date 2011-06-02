@@ -39,7 +39,7 @@ public class ProjectCoverageTest {
     public void testGetChildren() {
         FileCoverage fc = mock(FileCoverage.class);
         target.addChild(fc);
-        List<FileCoverage> list = target.getChildren();
+        List<BaseCoverage> list = target.getChildren();
         assertNotNull(list);
         assertEquals(1, list.size());
         assertEquals(fc, list.get(0));

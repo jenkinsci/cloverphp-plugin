@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.commons.digester.Digester;
+import org.jenkinsci.plugins.cloverphp.results.BaseCoverage;
 import org.xml.sax.SAXException;
 
 /**
@@ -31,7 +32,7 @@ public final class CloverCoverageParser {
         if (pathPrefix == null) {
             return result;
         }
-        for (FileCoverage f : result.getChildren()) {
+        for (BaseCoverage f : result.getChildren()) {
             if (f.getName().startsWith(pathPrefix)) {
                 f.setName(f.getName().substring(pathPrefix.length()));
             }

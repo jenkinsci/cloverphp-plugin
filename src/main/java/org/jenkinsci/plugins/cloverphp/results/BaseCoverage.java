@@ -50,9 +50,11 @@ public abstract class BaseCoverage {
 
     private int coveredelements;
 
-    private AbstractBuild owner = null;
+    private AbstractBuild owner;
 
     private BaseCoverage parent;
+    
+    List<BaseCoverage> children = new ArrayList<BaseCoverage>();
 
     public BaseCoverage getParent() {
         return parent;
@@ -75,7 +77,25 @@ public abstract class BaseCoverage {
         Collections.reverse(parents);
         return parents;
     }
-    
+
+    public List<BaseCoverage> getChildren() {
+        return children;
+    }
+
+    public boolean addChild(BaseCoverage child) {
+        child.setParent(this);
+        return children.add(child);
+    }
+
+    public BaseCoverage findChild(String token) {
+        for (BaseCoverage c : children) {
+            if (token.equals(c.getURLSafeName())) {
+                return c;
+            }
+        }
+        return null;
+    }
+
     public AbstractBuild getOwner() {
         return owner;
     }
@@ -268,6 +288,7 @@ public abstract class BaseCoverage {
             }
         };
     }
+
     private abstract class GraphImpl extends Graph {
 
         private BaseCoverage coverage;
@@ -331,5 +352,6 @@ public abstract class BaseCoverage {
             return chart;
         }
     }
+
     public abstract BaseCoverage getPreviousResult();
 }

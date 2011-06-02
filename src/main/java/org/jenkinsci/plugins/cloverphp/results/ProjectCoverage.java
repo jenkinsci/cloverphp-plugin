@@ -4,8 +4,6 @@ import hudson.model.AbstractBuild;
 import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -24,8 +22,6 @@ public class ProjectCoverage extends BaseCoverage {
     private int loc;
 
     private int ncloc;
-    
-    private List<FileCoverage> fileCoverages = new ArrayList<FileCoverage>();
 
     public int getClasses() {
         return classes;
@@ -58,31 +54,13 @@ public class ProjectCoverage extends BaseCoverage {
     public void setFiles(int files) {
         this.files = files;
     }
-    
-    public List<FileCoverage> getChildren() {
-        return fileCoverages;
-    }
 
-    public boolean addChild(FileCoverage child) {
-        child.setParent(this);
-        return fileCoverages.add(child);
-    }
-
-    public FileCoverage findChild(String token) {
-        for (FileCoverage i : fileCoverages) {
-            if (token.equals(i.getURLSafeName())) {
-                return i;
-            }
-        }
-        return null;
-    }
-
-    public FileCoverage getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
+    public BaseCoverage getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
         return findChild(token);
     }
 
     @Override
-    public ProjectCoverage getPreviousResult() {
+    public BaseCoverage getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;
@@ -92,8 +70,8 @@ public class ProjectCoverage extends BaseCoverage {
 
     @Override
     public void setOwner(AbstractBuild owner) {
-        super.setOwner(owner);   
-        for (FileCoverage p : fileCoverages) {
+        super.setOwner(owner);
+        for (BaseCoverage p : getChildren()) {
             p.setOwner(owner);
         }
     }

@@ -41,7 +41,7 @@ public class FileCoverageTest {
         target.addChild(cc1);
         ClassCoverage cc2 = new ClassCoverage();
         target.addChild(cc2);
-        List<ClassCoverage> list = target.getChildren();
+        List<BaseCoverage> list = target.getChildren();
         assertNotNull(list);
         assertEquals(2, list.size());
         assertTrue(list.contains(cc1));
@@ -89,7 +89,7 @@ public class FileCoverageTest {
         target.addChild(cc1);
         target.addChild(cc2);
         
-        ClassCoverage result = target.findChild("org.jenkinsci");
+        BaseCoverage result = target.findChild("org.jenkinsci");
         
         assertNotNull(result);
         assertEquals(cc2, result);
@@ -107,7 +107,7 @@ public class FileCoverageTest {
         target.addChild(cc1);
         target.addChild(cc2);
         
-        ClassCoverage result = target.findChild("org.jenkinsci.plugins");
+        BaseCoverage result = target.findChild("org.jenkinsci.plugins");
         
         assertNull(result);
     }

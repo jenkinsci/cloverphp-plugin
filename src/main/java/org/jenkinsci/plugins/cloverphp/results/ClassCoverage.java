@@ -22,7 +22,7 @@ public class ClassCoverage extends BaseCoverage {
     }
 
     @Override
-    public ClassCoverage getPreviousResult() {
+    public BaseCoverage getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;
@@ -31,7 +31,7 @@ public class ClassCoverage extends BaseCoverage {
         if (pc == null) {
             return null;
         }
-        FileCoverage fc = pc.findChild(getParent().getURLSafeName());
+        BaseCoverage fc = pc.findChild(getParent().getURLSafeName());
         if (fc == null) {
             return null;
         }
