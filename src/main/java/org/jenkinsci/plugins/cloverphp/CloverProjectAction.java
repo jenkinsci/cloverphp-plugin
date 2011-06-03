@@ -54,7 +54,7 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
             }
         }
         File reportDir = getLastBuildReportDir();
-        if (reportDir!= null && exists(new FilePath(reportDir), "clover.xml")) {
+        if (reportDir != null && exists(new FilePath(reportDir), "clover.xml")) {
             return ICON;
         }
         return null;
