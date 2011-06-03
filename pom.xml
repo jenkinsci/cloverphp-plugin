@@ -9,7 +9,7 @@
 
     <artifactId>cloverphp</artifactId>
     <packaging>hpi</packaging>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
     <name>Jenkins Clover PHP plugin</name>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Clover+PHP+Plugin</url>
 
