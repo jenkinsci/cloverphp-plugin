@@ -26,7 +26,13 @@ public class CloverHtmlBuildAction implements Action {
 
     public DirectoryBrowserSupport doDynamic(StaplerRequest req, StaplerResponse rsp) 
             throws IOException, ServletException, InterruptedException {
-        return new DirectoryBrowserSupport(this, buildReportPath, "Clover Html Report", 
+        // backward compatibility 
+        // since 0.3
+        FilePath path = buildReportPath;
+        if (!buildReportPath.exists()) {
+            path = buildReportPath.getParent();
+        }
+        return new DirectoryBrowserSupport(this, path, "Clover Html Report", 
                 CloverProjectAction.ICON, false);
     }
 
