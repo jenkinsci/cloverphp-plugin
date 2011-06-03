@@ -158,8 +158,13 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
             // no clover report links, until there is at least one build
             return null;
         }
-        final File reportDir = project.getLastBuild().getRootDir();
-        return reportDir;
+        // backward compatibility 
+        // since 0.3
+        File reportDir = new File(project.getLastBuild().getRootDir(), "cloverphp");
+        if (reportDir.exists()) {
+            return reportDir;
+        }
+        return project.getLastBuild().getRootDir();
     }
     
     private static final Logger LOGGER = Logger.getLogger(CloverProjectAction.class.getName());
