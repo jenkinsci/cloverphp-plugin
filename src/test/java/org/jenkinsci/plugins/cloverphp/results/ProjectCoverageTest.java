@@ -91,7 +91,7 @@ public class ProjectCoverageTest {
     }
 
     /**
-     * Test of getPreviousResult method, of class ProjectCoverage.
+     * Test of getPreviousCoverage method, of class ProjectCoverage.
      */
     @Test
     public void testGetPreviousResult() {
@@ -102,21 +102,21 @@ public class ProjectCoverageTest {
         ProjectCoverage coverage = spy(target);
         doReturn(cba).when(coverage).getPreviousCloverBuildAction();
 
-        BaseCoverage result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousCoverage();
 
         assertNotNull(result);
         assertEquals(p, result);
     }
 
     /**
-     * Test of getPreviousResult method, of class ProjectCoverage.
+     * Test of getPreviousCoverage method, of class ProjectCoverage.
      */
     @Test
     public void testGetPreviousResult_ActionNull() {
         ProjectCoverage coverage = spy(target);
         doReturn(null).when(coverage).getPreviousCloverBuildAction();
 
-        BaseCoverage result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousCoverage();
 
         assertNull(result);
     }

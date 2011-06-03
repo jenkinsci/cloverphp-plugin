@@ -11,18 +11,8 @@ public class ClassCoverage extends BaseCoverage {
     /**
      * exposed to jelly. 
      */
-    public String relativeUrl(BaseCoverage parent) {
-        StringBuilder url = new StringBuilder("..");
-        BaseCoverage p = getParent();
-        while (p != null && p != parent) {
-            url.append("/..");
-            p = p.getParent();
-        }
-        return url.toString();
-    }
-
     @Override
-    public BaseCoverage getPreviousResult() {
+    public BaseCoverage getPreviousCoverage() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;

@@ -3,11 +3,6 @@ package org.jenkinsci.plugins.cloverphp.results;
 import hudson.model.AbstractBuild;
 import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
 
-import java.io.IOException;
-
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
-
 /**
  * Clover Coverage results for a specific file.
  * @author Stephen Connolly
@@ -44,12 +39,11 @@ public class FileCoverage extends BaseCoverage {
         this.ncloc = ncloc;
     }
     
-    public BaseCoverage getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
-        return findChild(token);
-    }
-
+    /**
+     * exposed to jelly. 
+     */
     @Override
-    public BaseCoverage getPreviousResult() {
+    public BaseCoverage getPreviousCoverage() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
             return null;
@@ -61,19 +55,6 @@ public class FileCoverage extends BaseCoverage {
         return projectCoverage.findChild(getURLSafeName());
     }
 
-    /**
-     * exposed to jelly. 
-     */
-    public String relativeUrl(BaseCoverage parent) {
-        StringBuilder url = new StringBuilder("..");
-        BaseCoverage p = getParent();
-        while (p != null && p != parent) {
-            url.append("/..");
-            p = p.getParent();
-        }
-        return url.toString();
-    }
-    
     @Override
     public void setOwner(AbstractBuild owner) {
         super.setOwner(owner);    

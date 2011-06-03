@@ -11,6 +11,7 @@ import hudson.util.Graph;
 import hudson.util.ShiftedCategoryAxis;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -29,6 +30,8 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
+import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.StaplerResponse;
 
 /**
  *
@@ -53,7 +56,7 @@ public abstract class BaseCoverage {
     private AbstractBuild owner;
 
     private BaseCoverage parent;
-    
+
     List<BaseCoverage> children = new ArrayList<BaseCoverage>();
 
     public BaseCoverage getParent() {
@@ -246,6 +249,19 @@ public abstract class BaseCoverage {
         this.name = name;
     }
 
+    /**
+     * exposed to jelly. 
+     */
+    public String relativeUrl(BaseCoverage parent) {
+        StringBuilder url = new StringBuilder("..");
+        BaseCoverage p = getParent();
+        while (p != null && p != parent) {
+            url.append("/..");
+            p = p.getParent();
+        }
+        return url.toString();
+    }
+    
     protected CloverBuildAction getPreviousCloverBuildAction() {
         if (owner == null) {
             return null;
@@ -267,6 +283,15 @@ public abstract class BaseCoverage {
         return action;
     }
 
+    public BaseCoverage getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
+        return findChild(token);
+    }
+
+    /**
+     * exposed to jelly. 
+     */
+    public abstract BaseCoverage getPreviousCoverage();
+    
     public Graph getTrendGraph() {
         AbstractBuild build = getOwner();
         Calendar t = build.getTimestamp();
@@ -275,7 +300,7 @@ public abstract class BaseCoverage {
             @Override
             protected DataSetBuilder<String, NumberOnlyBuildLabel> createDataSet(BaseCoverage metrics) {
                 DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
-                for (BaseCoverage m = metrics; m != null; m = m.getPreviousResult()) {
+                for (BaseCoverage m = metrics; m != null; m = m.getPreviousCoverage()) {
                     ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(m.getOwner());
                     dsb.add(m.getMethodCoverage().getPercentageFloat(),
                             Messages.AbstractCloverMetrics_Label_method(), label);
@@ -353,5 +378,4 @@ public abstract class BaseCoverage {
         }
     }
 
-    public abstract BaseCoverage getPreviousResult();
 }

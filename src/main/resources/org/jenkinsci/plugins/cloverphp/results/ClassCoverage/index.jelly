@@ -10,7 +10,7 @@
 
             <h2>${%Class} ${it.name}</h2>
 
-            <j:if test="${it.previousResult != null}">
+            <j:if test="${it.previousCoverage != null}">
               <clover:trendGraph />
             </j:if>
 

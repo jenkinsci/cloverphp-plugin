@@ -29,17 +29,17 @@ public class ClassCoverageTest {
     }
 
     /**
-     * Test of getPreviousResult method, of class ClassCoverage.
+     * Test of getPreviousCoverage method, of class ClassCoverage.
      */
     @Test
     public void testGetPreviousResult_NullAction() {
         ClassCoverage mock = spy(target);
         doReturn(null).when(mock).getPreviousCloverBuildAction();
-        assertNull(mock.getPreviousResult());
+        assertNull(mock.getPreviousCoverage());
     }
 
     /**
-     * Test of getPreviousResult method, of class ClassCoverage.
+     * Test of getPreviousCoverage method, of class ClassCoverage.
      */
     @Test
     public void testGetPreviousResult_NullProjectCoverage() {
@@ -49,12 +49,12 @@ public class ClassCoverageTest {
         ClassCoverage mock = spy(target);
         doReturn(cba).when(mock).getPreviousCloverBuildAction();
         
-        BaseCoverage result = mock.getPreviousResult();
+        BaseCoverage result = mock.getPreviousCoverage();
         assertNull(result);
     }
 
     /**
-     * Test of getPreviousResult method, of class ClassCoverage.
+     * Test of getPreviousCoverage method, of class ClassCoverage.
      */
     @Test
     public void testGetPreviousResult_NullFileCoverage() {
@@ -71,12 +71,12 @@ public class ClassCoverageTest {
         doReturn(fc).when(mock).getParent();
         doReturn(cba).when(mock).getPreviousCloverBuildAction();
         
-        BaseCoverage result = mock.getPreviousResult();
+        BaseCoverage result = mock.getPreviousCoverage();
         assertNull(result);
     }
 
     /**
-     * Test of getPreviousResult method, of class ClassCoverage.
+     * Test of getPreviousCoverage method, of class ClassCoverage.
      */
     @Test
     public void testGetPreviousResult() {
@@ -97,7 +97,7 @@ public class ClassCoverageTest {
         doReturn(fc).when(mock).getParent();
         doReturn(cba).when(mock).getPreviousCloverBuildAction();
         
-        BaseCoverage result = mock.getPreviousResult();
+        BaseCoverage result = mock.getPreviousCoverage();
         assertNotNull(result);
     }
     

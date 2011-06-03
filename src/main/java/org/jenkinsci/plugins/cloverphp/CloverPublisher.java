@@ -218,6 +218,7 @@ public class CloverPublisher extends Recorder {
             ProjectCoverage result = null;
             try {
                 result = CloverCoverageParser.parse(cloverXmlReport, workspacePath);
+                result.setOwner(build);
             } catch (IOException e) {
                 Util.displayIOException(e, listener);
                 e.printStackTrace(listener.fatalError("Unable to copy coverage from "

@@ -113,7 +113,7 @@ public class FileCoverageTest {
     }
     
     /**
-     * Test of getPreviousResult method, of class FileCoverage.
+     * Test of getPreviousCoverage method, of class FileCoverage.
      */
     @Test
     public void testGetPreviousResult() {
@@ -127,14 +127,14 @@ public class FileCoverageTest {
         doReturn(cba).when(coverage).getPreviousCloverBuildAction();
         doReturn("org").when(coverage).getURLSafeName();
 
-        BaseCoverage result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousCoverage();
 
         assertNotNull(result);
         assertEquals(fc, result);
     }
 
     /**
-     * Test of getPreviousResult method, of class FileCoverage.
+     * Test of getPreviousCoverage method, of class FileCoverage.
      */
     @Test
     public void testGetPreviousResult_NoCoverage() {
@@ -145,19 +145,19 @@ public class FileCoverageTest {
         doReturn(cba).when(coverage).getPreviousCloverBuildAction();
         doReturn("org").when(coverage).getURLSafeName();
 
-        BaseCoverage result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousCoverage();
 
         assertNull(result);
     }
 
     /**
-     * Test of getPreviousResult method, of class FileCoverage.
+     * Test of getPreviousCoverage method, of class FileCoverage.
      */
     @Test
     public void testGetPreviousResult_NoAction() {
         FileCoverage coverage = spy(target);
         doReturn(null).when(coverage).getPreviousCloverBuildAction();
-        BaseCoverage result = coverage.getPreviousResult();
+        BaseCoverage result = coverage.getPreviousCoverage();
         assertNull(result);
     }
     

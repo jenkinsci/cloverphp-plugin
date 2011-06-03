@@ -128,7 +128,6 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
         }
         this.healthyTarget = healthyTarget;
         this.unhealthyTarget = unhealthyTarget;
-        r.setOwner(owner);
     }
 
     /** Obtains the detailed {@link CoverageReport} instance. */
@@ -139,6 +138,7 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
                 return r;
             }
         }
+        System.out.println("***** Reload colover.xml");
 
         File reportFile = CloverPublisher.getCloverXmlReport(owner);
         try {

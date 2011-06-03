@@ -11,7 +11,7 @@
         </div>
 
         <j:choose>
-            <j:when test="${lastResult.previousResult != null}">
+            <j:when test="${lastResult.previousCoverage != null}">
                 <table style="width: 90%">
                     <tr>
                         <th style="width:25%">${%Methods}</th>
