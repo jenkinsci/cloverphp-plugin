@@ -138,7 +138,6 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
                 return r;
             }
         }
-        System.out.println("***** Reload colover.xml");
 
         File reportFile = CloverPublisher.getCloverXmlReport(owner);
         try {
