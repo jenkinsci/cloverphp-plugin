@@ -1,5 +1,8 @@
 package org.jenkinsci.plugins.cloverphp;
 
+import hudson.util.IOException2;
+import java.io.File;
+import java.net.URL;
 import org.jenkinsci.plugins.cloverphp.results.BaseCoverage;
 import java.util.List;
 import org.junit.Test;
@@ -80,6 +83,51 @@ public class CloverCoverageParserTest {
     }
 
     @Test
+    public void testParse_File() throws Exception {
+        URL url = getClass().getResource("clover.xml");
+        File file = new File(url.toURI());
+        ProjectCoverage result = CloverCoverageParser.parse(file, "/var/lib/hudson/jobs/php-sample/workspace/");
+        
+        assertNotNull(result);
+        assertEquals(ProjectCoverage.class, result.getClass());
+        assertEquals("StringUtilTest", result.getName());
+        assertEquals(1, result.getFiles());        
+        assertEquals(14, result.getNcloc());        
+        assertEquals(16, result.getLoc());
+        assertEquals(1, result.getClasses());
+        assertEquals(2, result.getMethods());
+        assertEquals(1, result.getCoveredmethods());
+        assertEquals(2, result.getStatements());
+        assertEquals(1, result.getCoveredstatements());
+        assertEquals(4, result.getElements());
+        assertEquals(2, result.getCoveredelements());
+        
+        assertEquals(1, result.getChildren().size());
+        FileCoverage fileResult = (FileCoverage) result.getChildren().get(0);
+        assertEquals("phpsample/src/StringUtil.php", fileResult.getName());
+        assertEquals(14, fileResult.getNcloc());        
+        assertEquals(16, fileResult.getLoc());
+        assertEquals(1, fileResult.getClasses());
+        assertEquals(2, fileResult.getMethods());
+        assertEquals(1, fileResult.getCoveredmethods());
+        assertEquals(2, fileResult.getStatements());
+        assertEquals(1, fileResult.getCoveredstatements());
+        assertEquals(4, fileResult.getElements());
+        assertEquals(2, fileResult.getCoveredelements());
+        
+        
+        assertEquals(1, fileResult.getChildren().size());
+        ClassCoverage classResult = (ClassCoverage) fileResult.getChildren().get(0);
+        assertEquals("StringUtil", classResult.getName());
+        assertEquals(2, classResult.getMethods());
+        assertEquals(1, classResult.getCoveredmethods());
+        assertEquals(2, classResult.getStatements());
+        assertEquals(1, classResult.getCoveredstatements());
+        assertEquals(4, classResult.getElements());
+        assertEquals(2, classResult.getCoveredelements());
+    }
+    
+    @Test
     public void testParse() throws Exception {
         ProjectCoverage result = CloverCoverageParser.parse(getClass().getResourceAsStream("clover.xml"));
         assertNotNull(result);
@@ -121,4 +169,9 @@ public class CloverCoverageParserTest {
         assertEquals(2, classResult.getCoveredelements());
     }
 
+    @Test(expected=IOException2.class)
+    public void testParse_IllegalXML() throws Exception {
+        ProjectCoverage result = CloverCoverageParser.parse(getClass().getResourceAsStream("clover_error.xml"));
+    }
+    
 }

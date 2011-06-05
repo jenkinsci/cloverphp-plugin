@@ -72,7 +72,7 @@ public class CloverBuildActionTest {
         ProjectCoverage prjCoverage = new ProjectCoverage();
         CoverageTarget healthyTarget = null;
         CoverageTarget unhealthyTarget = new CoverageTarget();
-
+        
         CloverBuildAction action = new CloverBuildAction(build, workspacePath, prjCoverage, healthyTarget, unhealthyTarget);
 
         assertEquals(prjCoverage, action.getTarget());
@@ -101,8 +101,26 @@ public class CloverBuildActionTest {
     }
 
     @Test
+    public void testGetPreviousResult_SuccessBuild2() {
+        AbstractBuild p2 = mock(AbstractBuild.class);
+        when(p2.getResult()).thenReturn(Result.SUCCESS);
+        CloverBuildAction action = mock(CloverBuildAction.class);
+        when(p2.getAction(CloverBuildAction.class)).thenReturn(action);
+        
+        AbstractBuild p1 = mock(AbstractBuild.class);
+        when(p1.getResult()).thenReturn(Result.SUCCESS);
+        when(p1.getAction(CloverBuildAction.class)).thenReturn(null);
+
+        AbstractBuild target = mock(AbstractBuild.class);
+        when(target.getPreviousBuild()).thenReturn(p1);
+
+        assertNotNull(CloverBuildAction.getPreviousResult(target));
+        assertEquals(action, CloverBuildAction.getPreviousResult(target));
+    }
+    
+    @Test
     public void testGetPreviousResult_FailBuild() {
-        AbstractBuild b = mock(AbstractBuild.class);
+        AbstractBuild target = mock(AbstractBuild.class);
         AbstractBuild p1 = mock(AbstractBuild.class);
         AbstractBuild p2 = mock(AbstractBuild.class);
         CloverBuildAction pa = mock(CloverBuildAction.class);
@@ -111,15 +129,15 @@ public class CloverBuildActionTest {
         when(p2.getAction(CloverBuildAction.class)).thenReturn(pa);
         when(p1.getResult()).thenReturn(Result.FAILURE);
 
-        when(b.getPreviousBuild()).thenReturn(p1);
+        when(target.getPreviousBuild()).thenReturn(p1);
         when(p1.getPreviousBuild()).thenReturn(p2);
 
-        assertNotNull(CloverBuildAction.getPreviousResult(b));
-        assertEquals(pa, CloverBuildAction.getPreviousResult(b));
+        assertNotNull(CloverBuildAction.getPreviousResult(target));
+        assertEquals(pa, CloverBuildAction.getPreviousResult(target));
     }
 
     @Test
-    public void testPreviousResult() {
+    public void testGetPreviousResult() {
         AbstractBuild<?, ?> build = mock(AbstractBuild.class);
         String workspacePath = "/tmp/workpath";
         ProjectCoverage prjCoverage = new ProjectCoverage();
