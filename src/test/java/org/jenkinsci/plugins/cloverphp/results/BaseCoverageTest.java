@@ -70,7 +70,9 @@ public class BaseCoverageTest {
         FileCoverage target = new FileCoverage();
         ClassCoverage child = new ClassCoverage();
 
-        target.addChild(child);
+        boolean result = target.addChild(child);
+        assertTrue(result);
+        
         List<BaseCoverage> children = target.getChildren();
 
         assertEquals(target, child.getParent());
@@ -79,6 +81,21 @@ public class BaseCoverageTest {
         assertEquals(child, children.get(0));
     }
 
+    /**
+     * Test of addChild method, of class BaseCoverage.
+     */
+    @Test
+    public void testAddChild_AddNull() {
+        FileCoverage target = new FileCoverage();
+
+        boolean result = target.addChild(null);
+        assertFalse(result);
+        
+        List<BaseCoverage> children = target.getChildren();
+        assertNotNull(children);
+        assertEquals(0, children.size());
+    }
+    
     /**
      * Test of findChild method, of class BaseCoverage.
      */
@@ -99,6 +116,16 @@ public class BaseCoverageTest {
     }
 
     /**
+     * Test of findChild method, of class BaseCoverage.
+     */
+    @Test
+    public void testFindChild_Null() {
+        FileCoverage target = new FileCoverage();
+        BaseCoverage result = target.findChild(null);
+        assertNull(result);
+    }
+    
+    /**
      * Test of getURLSafeName method, of class BaseCoverage.
      */
     @Test
@@ -110,6 +137,18 @@ public class BaseCoverageTest {
         assertEquals("%20AA__AA", result);
     }
 
+    /**
+     * Test of getURLSafeName method, of class BaseCoverage.
+     */
+    @Test
+    public void testGetURLSafeName_NameNull() {
+        FileCoverage target = new FileCoverage();
+        target.setName(null);
+
+        String result = target.getURLSafeName();
+        assertNull( result);
+    }
+    
     /**
      * Test of relativeUrl method, of class BaseCoverage.
      */
@@ -136,8 +175,10 @@ public class BaseCoverageTest {
         f.addChild(target);
 
         String result = target.relativeUrl(p);
-
         assertEquals("../..", result);
+        
+        result = target.relativeUrl(f);
+        assertEquals("..", result);
     }
 
     /**

@@ -86,11 +86,17 @@ public abstract class BaseCoverage {
     }
 
     public boolean addChild(BaseCoverage child) {
+        if (child == null) {
+            return false;
+        }
         child.setParent(this);
         return children.add(child);
     }
 
     public BaseCoverage findChild(String token) {
+        if (token == null) {
+            return null;
+        }
         for (BaseCoverage c : children) {
             if (token.equals(c.getURLSafeName())) {
                 return c;
@@ -237,6 +243,9 @@ public abstract class BaseCoverage {
     }
 
     public String getURLSafeName() {
+        if (name == null) {
+            return null;
+        }
         return Util.rawEncode(name.replaceAll("[/+]", "_"));
     }
 
