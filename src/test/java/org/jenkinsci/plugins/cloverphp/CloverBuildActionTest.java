@@ -108,6 +108,7 @@ public class CloverBuildActionTest {
         when(p2.getAction(CloverBuildAction.class)).thenReturn(action);
         
         AbstractBuild p1 = mock(AbstractBuild.class);
+        when(p1.getPreviousBuild()).thenReturn(p2);
         when(p1.getResult()).thenReturn(Result.SUCCESS);
         when(p1.getAction(CloverBuildAction.class)).thenReturn(null);
 
