@@ -1,7 +1,10 @@
 package org.jenkinsci.plugins.cloverphp;
 
+import java.io.File;
+import java.net.URL;
 import hudson.model.AbstractBuild;
 import hudson.model.Result;
+import java.io.IOException;
 import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
 import org.jenkinsci.plugins.cloverphp.targets.CoverageTarget;
 import org.junit.After;
@@ -53,7 +56,7 @@ public class CloverBuildActionTest {
     }
 
     @Test
-    public void testGetResult_NotNullCoverage() {
+    public void testGetResult_NotNullReport() {
         AbstractBuild<?, ?> build = mock(AbstractBuild.class);
         String workspacePath = "/tmp/workpath";
         ProjectCoverage prjCoverage = new ProjectCoverage();
@@ -65,6 +68,37 @@ public class CloverBuildActionTest {
         assertEquals(prjCoverage, action.getResult());
     }
 
+    @Test
+    public void testGetResult_NullReport() throws Exception {
+        AbstractBuild<?, ?> build = mock(AbstractBuild.class);
+        URL url = getClass().getResource("clover.xml");
+        File cloverXml = new File(url.toURI());
+        when(build.getRootDir()).thenReturn(cloverXml.getParentFile());
+        
+        String workspacePath = "/tmp/workpath";
+        CoverageTarget unhealthyTarget = new CoverageTarget();
+
+        CloverBuildAction action = new CloverBuildAction(build, workspacePath, null, null, unhealthyTarget);
+        ProjectCoverage coverage = action.getResult();
+        
+        assertNotNull(coverage);
+    }
+
+    @Test
+    public void testGetResult_NoCloverXml() throws Exception {
+        AbstractBuild<?, ?> build = mock(AbstractBuild.class);
+        File cloverXml = new File("dummy");
+        when(build.getRootDir()).thenReturn(cloverXml.getParentFile());
+        
+        String workspacePath = "/tmp/workpath";
+        CoverageTarget unhealthyTarget = new CoverageTarget();
+
+        CloverBuildAction action = new CloverBuildAction(build, workspacePath, null, null, unhealthyTarget);
+        ProjectCoverage coverage = action.getResult();
+        
+        assertNull(coverage);
+    }
+    
     @Test
     public void testTarget() {
         AbstractBuild<?, ?> build = mock(AbstractBuild.class);
