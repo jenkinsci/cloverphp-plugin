@@ -1,6 +1,5 @@
 package org.jenkinsci.plugins.cloverphp.results;
 
-import hudson.model.AbstractBuild;
 import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
 
 /**
@@ -60,13 +59,5 @@ public class ProjectCoverage extends BaseCoverage {
             return null;
         }
         return action.getResult();
-    }
-
-    @Override
-    public void setOwner(AbstractBuild owner) {
-        super.setOwner(owner);
-        for (BaseCoverage p : getChildren()) {
-            p.setOwner(owner);
-        }
     }
 }

@@ -1,6 +1,5 @@
 package org.jenkinsci.plugins.cloverphp.results;
 
-import hudson.model.AbstractBuild;
 import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
 
 /**
@@ -38,7 +37,7 @@ public class FileCoverage extends BaseCoverage {
     public void setNcloc(int ncloc) {
         this.ncloc = ncloc;
     }
-    
+
     /**
      * exposed to jelly. 
      */
@@ -53,13 +52,5 @@ public class FileCoverage extends BaseCoverage {
             return null;
         }
         return projectCoverage.findChild(getURLSafeName());
-    }
-
-    @Override
-    public void setOwner(AbstractBuild owner) {
-        super.setOwner(owner);    
-        for (BaseCoverage child : getChildren()) {
-            child.setOwner(owner);
-        }
     }
 }

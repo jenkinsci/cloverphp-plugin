@@ -270,4 +270,24 @@ public class BaseCoverageTest {
 
         assertEquals(child, result);
     }
+
+    /**
+     * Test of setOwner method, of class BaseCoverage.
+     */
+    @Test
+    public void testSetOwner() throws Exception {
+        ClassCoverage c = new ClassCoverage();
+        FileCoverage f = new FileCoverage();
+        ProjectCoverage p = new ProjectCoverage();
+        p.addChild(f);
+        f.addChild(c);
+        
+        AbstractBuild build = mock(AbstractBuild.class);
+        p.setOwner(build);            
+        
+        assertEquals(build, p.getOwner());
+        assertEquals(build, f.getOwner());
+        assertEquals(build, c.getOwner());
+    }
+
 }

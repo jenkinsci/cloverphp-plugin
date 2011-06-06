@@ -4,7 +4,7 @@ import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
 
 /**
  * Clover Coverage results for a specific class.
- * @author Stephen Connolly
+ * @author Seiji Sogabe
  */
 public class ClassCoverage extends BaseCoverage {
 

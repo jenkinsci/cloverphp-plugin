@@ -35,7 +35,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 /**
  *
- * @author sogabe
+ * @author Seiji Sogabe
  */
 public abstract class BaseCoverage {
 
@@ -111,6 +111,10 @@ public abstract class BaseCoverage {
 
     public void setOwner(AbstractBuild owner) {
         this.owner = owner;
+        List<BaseCoverage> coverages = getChildren();
+        for (BaseCoverage coverage : coverages) {
+            coverage.setOwner(owner);
+        }
     }
 
     public Ratio getMethodCoverage() {
