@@ -159,18 +159,15 @@ public class CloverPublisher extends Recorder {
         final File buildRootDir = build.getRootDir(); // should this top level?
         final FilePath cloverphpBuildTarget = new FilePath(buildRootDir).child("cloverphp");
         final FilePath workspace = build.getWorkspace();
-        FilePath coverageReportDir = workspace.child(reportDir);
         try {
             listener.getLogger().println("Publishing Clover coverage report...");
 
             // if the build has failed, then there's not
             // much point in reporting an error
             final boolean buildFailure = build.getResult().isWorseOrEqualTo(Result.FAILURE);
-            final boolean missingReport = !coverageReportDir.exists();
 
-            if (buildFailure && missingReport) {
-                listener.getLogger().println("No Clover report will be published due to a "
-                        + (buildFailure ? "Build Failure" : "missing report"));
+            if (buildFailure) {
+                listener.getLogger().println("No Clover report will be published due to a Build Failure");
                 return true;
             }
 
@@ -178,6 +175,7 @@ public class CloverPublisher extends Recorder {
             cloverphpBuildTarget.mkdirs();
             
             if (isPublishHtmlReport() && !isDisableArchiving()) {
+                FilePath coverageReportDir = workspace.child(reportDir);
                 FilePath htmlReportDir = new FilePath(cloverphpBuildTarget, "htmlreport");
                 htmlReportDir.mkdirs();
                 final boolean htmlExists = copyHtmlReport(coverageReportDir, htmlReportDir, listener);
@@ -188,12 +186,10 @@ public class CloverPublisher extends Recorder {
             }
 
             final boolean xmlExists = copyXmlReport(workspace, cloverphpBuildTarget, listener);
-            processCloverXml(build, listener, coverageReportDir, cloverphpBuildTarget);
+            processCloverXml(build, listener, cloverphpBuildTarget);
 
         } catch (IOException e) {
             Util.displayIOException(e, listener);
-            e.printStackTrace(listener.fatalError("Unable to copy coverage from "
-                    + coverageReportDir + " to " + cloverphpBuildTarget));
             build.setResult(Result.FAILURE);
         }
 
@@ -205,8 +201,8 @@ public class CloverPublisher extends Recorder {
      * Process the clover.xml from the build directory. The clover.xml must have been already copied to the build dir.
      *
      */
-    private void processCloverXml(AbstractBuild<?, ?> build, BuildListener listener,
-            FilePath coverageReport, FilePath buildTarget) throws InterruptedException {
+    private void processCloverXml(AbstractBuild<?, ?> build, BuildListener listener, FilePath buildTarget) 
+            throws InterruptedException {
         String workspacePath = build.getWorkspace().getRemote();
         if (!workspacePath.endsWith(File.separator)) {
             workspacePath += File.separator;
@@ -220,8 +216,7 @@ public class CloverPublisher extends Recorder {
                 result = CloverCoverageParser.parse(cloverXmlReport, workspacePath);
             } catch (IOException e) {
                 Util.displayIOException(e, listener);
-                e.printStackTrace(listener.fatalError("Unable to copy coverage from "
-                        + coverageReport + " to " + buildTarget));
+                e.printStackTrace(listener.fatalError("Unable to parse " + cloverXmlReport));
                 build.setResult(Result.FAILURE);
             }
             final CloverBuildAction action = CloverBuildAction.load(build, workspacePath, result, healthyTarget, unhealthyTarget);
