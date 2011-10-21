@@ -4,6 +4,7 @@
          xmlns:f="/lib/form" xmlns:i="jelly:fmt"
          xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
     <t:summary icon="/plugin/cloverphp/clover_48x48.png">
+        <link rel="stylesheet" type="text/css" href="${rootURL}/plugin/cloverphp/css/style.css" />
         <j:set var="r" value="${it.result}" />
         ${%description(r.elementCoverage.percentage1d, r.methodCoverage, r.statementCoverage)}
 

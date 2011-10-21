@@ -3,66 +3,69 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local" xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
     <j:set var="lastResult" value="${from.lastSuccessfulResult.result}"/>
     <j:if test="${lastResult != null}">
+        <link rel="stylesheet" type="text/css" href="${rootURL}/plugin/cloverphp/css/style.css" />
         <j:set var="elementCoverage" value="${lastResult.elementCoverage}"/>
 
         <p/>
-        <div class="test-trend-caption">
+        <div align="right">
+            <div class="test-trend-caption">
             ${%test.trend.caption(elementCoverage.percentage1d,  elementCoverage)}
-        </div>
+            </div>
 
-        <j:choose>
-            <j:when test="${lastResult.previousResult != null}">
-                <table style="width: 90%">
-                    <tr>
-                        <th style="width:25%">${%Methods}</th>
-                        <td style="width:25%">${lastResult.methodCoverage.percentage1d}%</td>
-                        <th style="width:25%">${%Statements}</th>
-                        <td style="width:25%">${lastResult.statementCoverage.percentage1d}%</td>
-                    </tr>
-                </table>
+            <j:choose>
+                <j:when test="${lastResult.previousResult != null}">
+                    <table style="width: 500px">
+                        <tr>
+                            <th style="width:25%">${%Methods}</th>
+                            <td style="width:25%">${lastResult.methodCoverage.percentage1d}%</td>
+                            <th style="width:25%">${%Statements}</th>
+                            <td style="width:25%">${lastResult.statementCoverage.percentage1d}%</td>
+                        </tr>
+                    </table>
                 
-                <j:set var="provider" value="${lastResult.elementCoverage}"/>
-                <clover:coverage-bar/>
-                <p/>
-                <div>
-                    <a href="${from.urlName}/">
-                        <img src="${from.urlName}/trendGraph/png?width=500&amp;height=200" />
-                    </a>
-                </div>
-            </j:when>
-            <j:otherwise>
-                <div style="border: 1px solid #eee; ">
-                    <table style="padding: 0 10px; padding-top: 5px; width:380px;">
-                        <tr>
-                            <th align="left">${%Methods}</th>
-                            <td align="right">${lastResult.methodCoverage.percentage}%</td>
-                        </tr>
-                    </table>
-                    <table style="height: 3px; padding: 0 10px; width:380px;">
-                        <tr>
-                            <td>
-                                <j:set var="provider" value="${lastResult.methodCoverage}"/>
-                                <clover:coverage-bar/>
+                    <j:set var="provider" value="${lastResult.elementCoverage}"/>
+                    <clover:coverage-bar/>
+                    <p/>
+                    <div>
+                        <a href="${from.urlName}/">
+                            <img src="${from.urlName}/trendGraph/png?width=500&amp;height=200" />
+                        </a>
+                    </div>
+                </j:when>
+                <j:otherwise>
+                    <div style="border: 1px solid #eee; ">
+                        <table style="padding: 0 10px; padding-top: 5px; width:380px;">
+                            <tr>
+                                <th align="left">${%Methods}</th>
+                                <td align="right">${lastResult.methodCoverage.percentage}%</td>
+                            </tr>
+                        </table>
+                        <table style="height: 3px; padding: 0 10px; width:380px;">
+                            <tr>
+                                <td>
+                                    <j:set var="provider" value="${lastResult.methodCoverage}"/>
+                                    <clover:coverage-bar/>
 
-                            </td>
-                        </tr>
-                    </table>
-                    <table style="padding: 0 10px; width:380px;">
-                        <tr>
-                            <th align="left">${%Statements}</th>
-                            <td align="right">${lastResult.statementCoverage.percentage}%</td>
-                        </tr>
-                    </table>
-                    <table style="padding: 0 10px; padding-bottom:5px; width:380px;">
-                        <tr>
-                            <td>
-                                <j:set var="provider" value="${lastResult.statementCoverage}"/>
-                                <clover:coverage-bar/>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </j:otherwise>
-        </j:choose>
+                                </td>
+                            </tr>
+                        </table>
+                        <table style="padding: 0 10px; width:380px;">
+                            <tr>
+                                <th align="left">${%Statements}</th>
+                                <td align="right">${lastResult.statementCoverage.percentage}%</td>
+                            </tr>
+                        </table>
+                        <table style="padding: 0 10px; padding-bottom:5px; width:380px;">
+                            <tr>
+                                <td>
+                                    <j:set var="provider" value="${lastResult.statementCoverage}"/>
+                                    <clover:coverage-bar/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </j:otherwise>
+            </j:choose>
+        </div>
     </j:if>
 </j:jelly>
