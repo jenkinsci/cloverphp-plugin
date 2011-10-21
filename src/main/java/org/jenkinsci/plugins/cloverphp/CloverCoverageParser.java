@@ -47,7 +47,9 @@ public final class CloverCoverageParser {
             fileInputStream = new FileInputStream(inFile);
             bufferedInputStream = new BufferedInputStream(fileInputStream);
             CloverCoverageParser parser = new CloverCoverageParser();
-            return trimPaths(parse(bufferedInputStream), pathPrefix);
+            ProjectCoverage pc = trimPaths(parse(bufferedInputStream), pathPrefix);
+            pc.setName(Messages.CloverCoverageParser_ProjectName());
+            return pc;
         } finally {
             try {
                 if (bufferedInputStream != null) {
