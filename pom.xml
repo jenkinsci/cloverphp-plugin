@@ -31,16 +31,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <build>
-        <extensions>
-            <extension>
-                <groupId>jp.ddo.bacons</groupId>
-                <artifactId>check-rules</artifactId>
-                <version>0.2</version>
-            </extension>
-        </extensions>                
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -88,7 +78,7 @@
                         <version>2.3</version>
                         <configuration>
                             <consoleOutput>false</consoleOutput>
-                            <configLocation>default/checkstyle/checkstyle.xml</configLocation>
+                            <configLocation>rules/checkstyle/checkstyle.xml</configLocation>
                             <encoding>${project.build.sourceEncoding}</encoding>
                         </configuration>
                     </plugin>
@@ -100,7 +90,7 @@
                             <sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
                             <targetJdk>${jdk.version}</targetJdk>
                             <rulesets>
-                                <ruleset>default/pmd/pmd.xml</ruleset>
+                                <ruleset>rules/pmd/pmd.xml</ruleset>
                             </rulesets>
                             <excludes>
                                 <exclude>**/Messages.java</exclude>
@@ -112,7 +102,7 @@
                         <artifactId>findbugs-maven-plugin</artifactId>
                         <version>2.1</version>
                         <configuration>
-                            <includeFilterFile>default/findbugs/include_filter.xml</includeFilterFile>
+                            <includeFilterFile>rules/findbugs/include_filter.xml</includeFilterFile>
                             <findbugsXmlOutput>true</findbugsXmlOutput>
                             <xmlOutput>true</xmlOutput>
                             <debug>true</debug>
@@ -160,10 +150,6 @@
         <repository>
             <id>m.g.o-public</id>
             <url>http://maven.glassfish.org/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>b.d.j-public</id>
-            <url>http://bacons.ddo.jp/maven2/</url>
         </repository>
         <repository>
             <id>powermock-repo</id>
