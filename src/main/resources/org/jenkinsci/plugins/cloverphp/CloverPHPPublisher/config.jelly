@@ -4,14 +4,14 @@
     <f:entry title="${%Clover XML Location}"
                  description="${%description.XmlLocation}">
         <f:textbox name="clover.xmlLocation" value="${instance.xmlLocation}"
-                   checkUrl="'descriptorByName/CloverPublisher/requiredCheck?value='+encodeURIComponent(this.value)"/>
+                   checkUrl="'descriptorByName/CloverPHPPublisher/requiredCheck?value='+encodeURIComponent(this.value)"/>
     </f:entry>
 
     <f:optionalBlock name="clover.publishHtmlReport" checked="${instance.publishHtmlReport}" title="${%Publish HTML Report}" >
         <f:entry title="${%Clover HTML report directory}"
                          description="${%description.HtmlReportDir}">
             <f:textbox name="clover.reportDir" value="${instance.reportDir}" 
-                   checkUrl="'descriptorByName/CloverPublisher/requiredCheck?value='+encodeURIComponent(this.value)" />
+                   checkUrl="'descriptorByName/CloverPHPPublisher/requiredCheck?value='+encodeURIComponent(this.value)" />
         </f:entry>
         <f:entry>
             <f:checkbox name="clover.disableArchiving" checked="${instance.isDisableArchiving()}" />

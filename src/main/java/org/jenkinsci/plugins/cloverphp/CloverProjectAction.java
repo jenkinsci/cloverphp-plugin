@@ -31,9 +31,9 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
 
     private final Project<?, ?> project;
     
-    private final CloverPublisher publisher;
+    private final CloverPHPPublisher publisher;
 
-    public CloverProjectAction(Project project, CloverPublisher publisher) {
+    public CloverProjectAction(Project project, CloverPHPPublisher publisher) {
         this.project = project;
         this.publisher = publisher;
     }

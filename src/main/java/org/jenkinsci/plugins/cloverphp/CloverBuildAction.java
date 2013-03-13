@@ -140,7 +140,7 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
             }
         }
 
-        File reportFile = CloverPublisher.getCloverXmlReport(owner);
+        File reportFile = CloverPHPPublisher.getCloverXmlReport(owner);
         try {
             ProjectCoverage r = CloverCoverageParser.parse(reportFile, buildBaseDir);
             r.setOwner(owner);

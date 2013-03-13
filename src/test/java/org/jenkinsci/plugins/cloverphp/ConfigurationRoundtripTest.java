@@ -16,7 +16,7 @@ public class ConfigurationRoundtripTest extends HudsonTestCase {
 
         FreeStyleProject p = createFreeStyleProject();
 
-        CloverPublisher publisher = new CloverPublisher("coverage.xml", "true", "reports", false);
+        CloverPHPPublisher publisher = new CloverPHPPublisher("coverage.xml", "true", "reports", false);
         p.getPublishersList().add(publisher);
 
         submit(new WebClient().getPage(p, "configure").getFormByName("config"));
@@ -36,7 +36,7 @@ public class ConfigurationRoundtripTest extends HudsonTestCase {
 
         FreeStyleProject p = createFreeStyleProject();
 
-        CloverPublisher publisher = new CloverPublisher("coverage.xml", null, "reports", true);
+        CloverPHPPublisher publisher = new CloverPHPPublisher("coverage.xml", null, "reports", true);
         p.getPublishersList().add(publisher);
 
         submit(new WebClient().getPage(p, "configure").getFormByName("config"));
@@ -56,7 +56,7 @@ public class ConfigurationRoundtripTest extends HudsonTestCase {
 
         FreeStyleProject p = createFreeStyleProject();
 
-        CloverPublisher publisher = new CloverPublisher("coverage.xml", null, null, false);
+        CloverPHPPublisher publisher = new CloverPHPPublisher("coverage.xml", null, null, false);
         p.getPublishersList().add(publisher);
 
         submit(new WebClient().getPage(p, "configure").getFormByName("config"));
