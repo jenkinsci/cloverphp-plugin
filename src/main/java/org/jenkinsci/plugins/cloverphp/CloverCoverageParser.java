@@ -84,7 +84,11 @@ public final class CloverCoverageParser {
         digester.addSetNext("coverage/project/file/class", "addClassCoverage", ClassCoverage.class.getName());
 
         try {
-            return (ProjectCoverage) digester.parse(in);
+            ProjectCoverage coverage = (ProjectCoverage) digester.parse(in);
+            if (coverage == null) {
+                throw new IOException("coverage report seems to be incompatible with clover style.");
+            }
+            return coverage;
         } catch (SAXException e) {
             throw new IOException2("Cannot parse coverage results", e);
         }

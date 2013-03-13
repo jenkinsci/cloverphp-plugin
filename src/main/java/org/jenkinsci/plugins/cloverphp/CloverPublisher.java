@@ -218,6 +218,7 @@ public class CloverPublisher extends Recorder {
                 Util.displayIOException(e, listener);
                 e.printStackTrace(listener.fatalError("Unable to parse " + cloverXmlReport));
                 build.setResult(Result.FAILURE);
+                result = new ProjectCoverage();
             }
             final CloverBuildAction action = CloverBuildAction.load(build, workspacePath, result, healthyTarget, unhealthyTarget);
 
