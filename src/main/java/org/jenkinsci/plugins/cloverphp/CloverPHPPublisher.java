@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.cloverphp;
 
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.Launcher;
@@ -177,8 +178,10 @@ public class CloverPHPPublisher extends Recorder {
             // create "jobs/builds/XXX/cloverphp"
             cloverphpBuildTarget.mkdirs();
 
+            EnvVars env = build.getEnvironment(listener);
+
             if (isPublishHtmlReport() && !isDisableArchiving()) {
-                FilePath coverageReportDir = workspace.child(reportDir);
+                FilePath coverageReportDir = workspace.child(env.expand(reportDir));
                 FilePath htmlReportDir = new FilePath(cloverphpBuildTarget, "htmlreport");
                 htmlReportDir.mkdirs();
                 final boolean htmlExists = copyHtmlReport(coverageReportDir, htmlReportDir, listener);
@@ -188,7 +191,7 @@ public class CloverPHPPublisher extends Recorder {
                 }
             }
 
-            final boolean xmlExists = copyXmlReport(workspace, cloverphpBuildTarget, listener);
+            final boolean xmlExists = copyXmlReport(workspace, cloverphpBuildTarget, listener, env.expand(xmlLocation));
             processCloverXml(build, listener, cloverphpBuildTarget);
 
         } catch (IOException e) {
@@ -240,11 +243,11 @@ public class CloverPHPPublisher extends Recorder {
         }
     }
 
-    private boolean copyXmlReport(FilePath workspace, FilePath buildTarget, BuildListener listener)
+    private boolean copyXmlReport(FilePath workspace, FilePath buildTarget, BuildListener listener, String xml)
             throws IOException, InterruptedException {
         // check one directory deep for a clover.xml, if there is not one in the coverageReport dir already
         // the clover auto-integration saves clover reports in: clover/${ant.project.name}/clover.xml
-        final FilePath cloverXmlPath = workspace.child(getXmlLocation());
+        final FilePath cloverXmlPath = workspace.child(xml);
         final FilePath toFile = buildTarget.child("clover.xml");
         if (cloverXmlPath.exists()) {
             listener.getLogger().println("Publishing Clover XML report...");
@@ -252,7 +255,7 @@ public class CloverPHPPublisher extends Recorder {
             return true;
         }
         listener.getLogger().println("Clover xml file does not exist in: " + workspace
-                + " called: " + getXmlLocation()
+                + " called: " + xml
                 + " and will not be copied to: " + toFile);
         return false;
 
