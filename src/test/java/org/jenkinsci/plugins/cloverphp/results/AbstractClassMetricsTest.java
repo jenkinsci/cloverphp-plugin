@@ -1,7 +1,6 @@
 package org.jenkinsci.plugins.cloverphp.results;
 
 import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
-import hudson.model.Run;
 import hudson.model.AbstractBuild;
 import java.util.List;
 import org.jenkinsci.plugins.cloverphp.Ratio;
@@ -152,7 +151,7 @@ public class AbstractClassMetricsTest {
     @Test
     public void testGetPreviousCloverBuildAction_ActionNotNull() {
         CloverBuildAction cba = mock(CloverBuildAction.class);
-        Run<?, ?> r = mock(Run.class);
+        AbstractBuild r = mock(AbstractBuild.class);
         when(r.getAction(CloverBuildAction.class)).thenReturn(cba);
         AbstractBuild b = mock(AbstractBuild.class);
         when(b.getPreviousBuild()).thenReturn(r);
@@ -166,11 +165,11 @@ public class AbstractClassMetricsTest {
     @Test
     public void testGetPreviousCloverBuildAction_ActionNull() {
         CloverBuildAction cba2 = null;
-        Run prebuild2 = mock(Run.class);
+        AbstractBuild prebuild2 = mock(AbstractBuild.class);
         when(prebuild2.getAction(CloverBuildAction.class)).thenReturn(cba2);
         
         CloverBuildAction cba = null;
-        Run prebuild = mock(Run.class);
+        AbstractBuild prebuild = mock(AbstractBuild.class);
         when(prebuild.getAction(CloverBuildAction.class)).thenReturn(cba);
         
         when(prebuild.getPreviousBuild()).thenReturn(prebuild2);
@@ -187,7 +186,7 @@ public class AbstractClassMetricsTest {
     @Test
     public void testGetPreviousCloverBuildAction_Pre2BuildNull() {
         CloverBuildAction cba = null;
-        Run prebuild = mock(Run.class);
+        AbstractBuild prebuild = mock(AbstractBuild.class);
         when(prebuild.getAction(CloverBuildAction.class)).thenReturn(cba);
         
         when(prebuild.getPreviousBuild()).thenReturn(null);

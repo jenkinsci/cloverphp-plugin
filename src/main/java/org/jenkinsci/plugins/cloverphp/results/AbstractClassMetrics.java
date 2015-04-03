@@ -55,7 +55,7 @@ public abstract class AbstractClassMetrics {
 
     private int coveredelements;
 
-    private AbstractBuild owner = null;
+    private AbstractBuild owner;
 
     public Ratio getMethodCoverage() {
         return Ratio.create(coveredmethods, methods);
@@ -249,7 +249,7 @@ public abstract class AbstractClassMetrics {
             return null;
         }
 
-        Run<?, ?> prevBuild = owner.getPreviousBuild();
+        AbstractBuild prevBuild = owner.getPreviousBuild();
         if (prevBuild == null) {
             return null;
         }
@@ -274,7 +274,7 @@ public abstract class AbstractClassMetrics {
             protected DataSetBuilder<String, NumberOnlyBuildLabel> createDataSet(AbstractClassMetrics metrics) {
                 DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel> dsb = new DataSetBuilder<String, ChartUtil.NumberOnlyBuildLabel>();
                 for (AbstractClassMetrics m = metrics; m != null; m = m.getPreviousResult()) {
-                    ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel(m.getOwner());
+                    ChartUtil.NumberOnlyBuildLabel label = new ChartUtil.NumberOnlyBuildLabel((Run) m.getOwner());
                     dsb.add(m.getMethodCoverage().getPercentageFloat(),
                             Messages.AbstractCloverMetrics_Label_method(), label);
                     dsb.add(m.getStatementCoverage().getPercentageFloat(),
