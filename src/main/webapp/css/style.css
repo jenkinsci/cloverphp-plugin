@@ -20,18 +20,23 @@
     width: 100%;
 }
 
-.barNegative {
-    font-size: 2px;
-    background: #DF0000;
-    border: #9c9c9c 1px solid;
-    text-align: left;
-    height: 12px;
-    width: 100%;
+.graph { 
+    position: relative; /* IE is dumb */
+    width: 200px; 
+    border: 2px solid #9ACD32; 
+    padding: 0px; 
+    background-color: #FF7F50;
 }
-
-.barPositive {
-    font-size: 2px;
-    background: #00DF00;
-    height: 12px;
+.graph .bar { 
+    display: block;
+    position: relative;
+    background: #9ACD32; 
+    text-align: center; 
+    color: #333; 
+    height: 1.2em; 
+    line-height: 1.2em;            
 }
-
+.graph .bar span { 
+    position: absolute; 
+    left: 1em; 
+}
