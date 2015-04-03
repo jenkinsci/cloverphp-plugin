@@ -166,15 +166,6 @@ public class CloverPHPPublisher extends Recorder {
         try {
             listener.getLogger().println("Publishing Clover coverage report...");
 
-            // if the build has failed, then there's not
-            // much point in reporting an error
-            final boolean buildFailure = build.getResult().isWorseOrEqualTo(Result.FAILURE);
-
-            if (buildFailure) {
-                listener.getLogger().println("No Clover report will be published due to a Build Failure");
-                return true;
-            }
-
             // create "jobs/builds/XXX/cloverphp"
             cloverphpBuildTarget.mkdirs();
 
@@ -198,7 +189,6 @@ public class CloverPHPPublisher extends Recorder {
             Util.displayIOException(e, listener);
             build.setResult(Result.FAILURE);
         }
-
 
         return true;
     }

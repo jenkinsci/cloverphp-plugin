@@ -3,22 +3,34 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form"
          xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
 
-<div>
+    <div>
 
-    <div style="width: 100px; font-size:0px;"></div>
+        <j:if test="${provider.hasData eq 'false'}">
+            <j:choose>
+                <j:when test="${large}">
+                    <div class="emptygraph" style="width: 450px;"/>
+                </j:when>
+                <j:otherwise>
+                    <div class="emptygraph" />
+                </j:otherwise>
+            </j:choose>
+        </j:if>
 
+        <j:if test="${provider.hasData eq 'true'}">
+            <j:choose>
+                <j:when test="${large}">
+                    <div title="${provider.pcUncovered} ${%Not Covered}"  class="graph" style="width: 450px;">
+                        <div title="${provider.pcCovered} ${%Covered}" class="bar" style="width: ${provider.pcWidth}">${provider.pcCovered}</div>
+                    </div>
+                </j:when>
+                <j:otherwise>
+                    <div title="${provider.pcUncovered} ${%Not Covered}"  class="graph">
+                        <div title="${provider.pcCovered} ${%Covered}" class="bar" style="width: ${provider.pcWidth}">${provider.pcCovered}</div>
+                    </div>
+                </j:otherwise>
+            </j:choose>
+        </j:if>
 
-    <j:if test="${provider.hasData eq 'false'}">
-        <div title="${%Empty}" class="barEmpty" style="min-width: 100px;"></div>
-    </j:if>
-
-    <j:if test="${provider.hasData eq 'true'}">
-
-        <div title="${provider.pcUncovered} ${%Not Covered}" style="min-width: 100px;" class="barNegative ">
-            <div title="${provider.pcCovered} ${%Covered}" class="barPositive" style="width: ${provider.pcWidth}">${provider.pcCovered}</div>
-        </div>
-    </j:if>
-
-</div>
+    </div>
 
 </j:jelly>

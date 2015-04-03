@@ -12,26 +12,30 @@
 }
 
 /* Just a dash of the Clover Secret Sauce ;) */
-.barEmpty {
-    font-size: 2px;
-    background: #c0c0c0;
-    border: #9c9c9c 1px solid;
-    height: 12px;
-    width: 100%;
+.emptygraph {
+    position: relative; /* IE is dumb */
+    width: 150px;
+    border: 1px solid #808080;
+    padding: 0px;
+    background-color: #808080;
+    height: 1.2em;
+    line-height: 1.2em;
 }
 
-.barNegative {
-    font-size: 2px;
-    background: #DF0000;
-    border: #9c9c9c 1px solid;
+.graph { 
+    position: relative; /* IE is dumb */
+    width: 150px;
+    border: 1px solid #808080;
+    padding: 0px; 
+    background-color: #ff9090;
     text-align: left;
-    height: 12px;
-    width: 100%;
 }
-
-.barPositive {
-    font-size: 2px;
-    background: #00DF00;
-    height: 12px;
+.graph .bar {
+    display: block;
+    position: relative;
+    background: #80ff80;
+    text-align: center; 
+    color: #333; 
+    height: 1.2em; 
+    line-height: 1.2em;            
 }
-
