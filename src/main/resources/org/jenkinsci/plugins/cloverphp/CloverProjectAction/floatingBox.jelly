@@ -24,7 +24,7 @@
                     </table>
                 
                     <j:set var="provider" value="${lastResult.elementCoverage}"/>
-                    <clover:coverage-bar/>
+                    <clover:coverage-bar large='true'/>
                     <p/>
                     <div>
                         <a href="${from.urlName}/">
@@ -59,7 +59,7 @@
                             <tr>
                                 <td>
                                     <j:set var="provider" value="${lastResult.statementCoverage}"/>
-                                    <clover:coverage-bar/>
+                                    <clover:coverage-bar large='true'/>
                                 </td>
                             </tr>
                         </table>
