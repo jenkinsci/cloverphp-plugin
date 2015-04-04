@@ -17,7 +17,7 @@ import java.util.HashSet;
 public class CoverageTarget implements Serializable {
 
     private static final int RANGE_MAX = 100;
-    
+
     private Integer methodCoverage;
 
     private Integer statementCoverage;

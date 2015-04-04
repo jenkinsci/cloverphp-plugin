@@ -20,7 +20,9 @@ import org.xml.sax.SAXException;
  */
 public final class CloverCoverageParser {
 
-    /** Do not instantiate CloverCoverageParser. */
+    /**
+     * Do not instantiate CloverCoverageParser.
+     */
     private CloverCoverageParser() {
     }
 

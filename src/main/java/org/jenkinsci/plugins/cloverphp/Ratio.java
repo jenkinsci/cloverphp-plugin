@@ -61,19 +61,23 @@ public final class Ratio implements Serializable, CoverageBarProvider {
         return Ratio.PC_WIDTH_FORMAT.format(pc) + "%";
     }
 
+    @Override
     public String getPcWidth() {
         return pcFormat(getPercentageFloat());
     }
 
+    @Override
     public String getPcUncovered() {
         float pcUncovered = 100.0f - getPercentageFloat();
         return pcFormat(pcUncovered);
     }
 
+    @Override
     public String getPcCovered() {
         return getPercentageStr();
     }
 
+    @Override
     public String getHasData() {
         return "" + (denominator > 0);
     }

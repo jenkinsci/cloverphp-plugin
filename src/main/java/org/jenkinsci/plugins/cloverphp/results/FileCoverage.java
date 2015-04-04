@@ -12,6 +12,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Clover Coverage results for a specific file.
+ *
  * @author Stephen Connolly
  */
 public class FileCoverage extends AbstractFileMetrics {
@@ -44,6 +45,7 @@ public class FileCoverage extends AbstractFileMetrics {
         return null;
     }
 
+    @Override
     public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
@@ -58,7 +60,8 @@ public class FileCoverage extends AbstractFileMetrics {
 
     @Override
     public void setOwner(AbstractBuild owner) {
-        super.setOwner(owner);    //To change body of overridden methods use File | Settings | File Templates.
+        super.setOwner(owner);
+        //To change body of overridden methods use File | Settings | File Templates.
         for (ClassCoverage classCoverage : classCoverages) {
             classCoverage.setOwner(owner);
         }

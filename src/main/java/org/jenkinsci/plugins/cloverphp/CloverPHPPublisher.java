@@ -283,6 +283,7 @@ public class CloverPHPPublisher extends Recorder {
         return DESCRIPTOR;
     }
 
+    @Override
     public BuildStepMonitor getRequiredMonitorService() {
         return BuildStepMonitor.BUILD;
     }

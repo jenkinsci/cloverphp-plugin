@@ -34,6 +34,7 @@ import org.jfree.ui.RectangleInsets;
 
 /**
  * Abstract Clover Coverage results.
+ *
  * @author Stephen Connolly
  * @author Seiji Sogabe
  */
@@ -210,9 +211,9 @@ public abstract class AbstractClassMetrics {
     public AbstractClassMetrics getParent() {
         return parent;
     }
-    
+
     /**
-     * exposed to jelly. 
+     * exposed to jelly.
      */
     public List<AbstractClassMetrics> getParents() {
         List<AbstractClassMetrics> parents = new ArrayList<AbstractClassMetrics>();
@@ -226,7 +227,7 @@ public abstract class AbstractClassMetrics {
     }
 
     /**
-     * exposed to jelly. 
+     * exposed to jelly.
      */
     public String relativeUrl(AbstractClassMetrics parent) {
         StringBuilder url = new StringBuilder("..");
@@ -237,7 +238,7 @@ public abstract class AbstractClassMetrics {
         }
         return url.toString();
     }
-    
+
     public void setParent(AbstractClassMetrics parent) {
         this.parent = parent;
     }
@@ -311,10 +312,9 @@ public abstract class AbstractClassMetrics {
                     true, // include legend
                     true, // tooltips
                     false // urls
-                    );
+            );
 
             // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
-
             final LegendTitle legend = chart.getLegend();
             legend.setPosition(RectangleEdge.BOTTOM);
 

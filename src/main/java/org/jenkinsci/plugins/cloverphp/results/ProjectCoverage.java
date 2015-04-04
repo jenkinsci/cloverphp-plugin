@@ -12,6 +12,7 @@ import org.kohsuke.stapler.StaplerResponse;
 
 /**
  * Clover Coverage results for the entire project.
+ *
  * @author Stephen Connolly
  * @author Seiji Sogabe
  */
@@ -45,6 +46,7 @@ public class ProjectCoverage extends AbstractProjectMetrics {
         return findFileCoverage(token);
     }
 
+    @Override
     public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {
@@ -55,7 +57,7 @@ public class ProjectCoverage extends AbstractProjectMetrics {
 
     @Override
     public void setOwner(AbstractBuild owner) {
-        super.setOwner(owner);   
+        super.setOwner(owner);
         for (FileCoverage p : fileCoverages) {
             p.setOwner(owner);
         }

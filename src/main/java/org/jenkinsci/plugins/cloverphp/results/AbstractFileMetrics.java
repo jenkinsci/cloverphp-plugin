@@ -2,6 +2,7 @@ package org.jenkinsci.plugins.cloverphp.results;
 
 /**
  * Clover Coverage results for multiple classes.
+ *
  * @author Stephen Connolly
  */
 public abstract class AbstractFileMetrics extends AbstractClassMetrics {
@@ -12,32 +13,44 @@ public abstract class AbstractFileMetrics extends AbstractClassMetrics {
 
     private int ncloc;
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int getClasses() {
         return classes;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setClasses(int classes) {
         this.classes = classes;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int getLoc() {
         return loc;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setLoc(int loc) {
         this.loc = loc;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public int getNcloc() {
         return ncloc;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public void setNcloc(int ncloc) {
         this.ncloc = ncloc;
     }

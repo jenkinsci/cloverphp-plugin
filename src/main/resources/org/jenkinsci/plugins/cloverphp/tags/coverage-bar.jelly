@@ -3,8 +3,6 @@
          xmlns:t="/lib/hudson" xmlns:f="/lib/form"
          xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
 
-    <div>
-
         <j:if test="${provider.hasData eq 'false'}">
             <j:choose>
                 <j:when test="${large}">
@@ -31,6 +29,5 @@
             </j:choose>
         </j:if>
 
-    </div>
 
 </j:jelly>
