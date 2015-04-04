@@ -28,8 +28,11 @@
     border: 1px solid #808080;
     padding: 0px; 
     background-color: #ff9090;
-    text-align: left;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
 }
+
 .graph .bar {
     display: block;
     position: relative;
