@@ -30,7 +30,7 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
     static final String ICON = "/plugin/cloverphp/clover_48x48.png";
 
     private final Project<?, ?> project;
-    
+
     private final CloverPHPPublisher publisher;
 
     public CloverProjectAction(Project project, CloverPHPPublisher publisher) {
@@ -82,6 +82,7 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
      * Returns the last Result that was successful.
      *
      * WARNING: this method is invoked dynamically from CloverProjectAction/floatingBox.jelly
+     *
      * @return the last successful build result
      */
     public CloverBuildAction getLastSuccessfulResult() {
@@ -127,7 +128,7 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
                 rsp.sendRedirect2("../" + buildNumber + "/cloverphp-report");
             }
         }
-        
+
         throw new Failure(Messages.CloverProjectAction_HTML_NoCloverReportFound());
     }
 
@@ -143,8 +144,8 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
             LOGGER.warning(ex.getMessage());
         }
         return false;
-    } 
-    
+    }
+
     private FilePath getWorkspaceReportDir() {
         AbstractBuild<?, ?> lb = project.getLastBuild();
         if (lb == null) {
@@ -156,7 +157,7 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
         }
         return workspace.child(publisher.getReportDir());
     }
-    
+
     private File getLastBuildReportDir() {
         if (project.getLastBuild() == null) {
             // no clover report links, until there is at least one build
@@ -170,6 +171,6 @@ public class CloverProjectAction extends Actionable implements ProminentProjectA
         }
         return project.getLastBuild().getRootDir();
     }
-    
+
     private static final Logger LOGGER = Logger.getLogger(CloverProjectAction.class.getName());
 }

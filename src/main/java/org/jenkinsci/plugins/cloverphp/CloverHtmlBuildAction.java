@@ -9,12 +9,10 @@ import org.kohsuke.stapler.StaplerResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
 
-/**
- */
 public class CloverHtmlBuildAction implements Action {
 
     // location of the clover html for each build
-    private final FilePath buildReportPath; 
+    private final FilePath buildReportPath;
 
     public CloverHtmlBuildAction(FilePath buildReportPath) {
         this.buildReportPath = buildReportPath;
@@ -25,7 +23,7 @@ public class CloverHtmlBuildAction implements Action {
         return Messages.CloverHtmlBuildAction_DisplayName();
     }
 
-    public DirectoryBrowserSupport doDynamic(StaplerRequest req, StaplerResponse rsp) 
+    public DirectoryBrowserSupport doDynamic(StaplerRequest req, StaplerResponse rsp)
             throws IOException, ServletException, InterruptedException {
         // backward compatibility 
         // since 0.3
@@ -33,7 +31,7 @@ public class CloverHtmlBuildAction implements Action {
         if (!buildReportPath.exists()) {
             path = buildReportPath.getParent();
         }
-        return new DirectoryBrowserSupport(this, path, "Clover Html Report", 
+        return new DirectoryBrowserSupport(this, path, "Clover Html Report",
                 CloverProjectAction.ICON, false);
     }
 
