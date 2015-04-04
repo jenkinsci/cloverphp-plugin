@@ -9,7 +9,7 @@
 
     <artifactId>cloverphp</artifactId>
     <packaging>hpi</packaging>
-    <version>0.4</version>
+    <version>0.5-SNAPSHOT</version>
     <name>Jenkins Clover PHP plugin</name>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Clover+PHP+Plugin</url>
 
@@ -24,7 +24,7 @@
         <connection>scm:git:git://github.com/jenkinsci/cloverphp-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/cloverphp-plugin.git</developerConnection>
         <url>http://github.com/jenkinsci/cloverphp-plugin</url>
-      <tag>cloverphp-0.4</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>
