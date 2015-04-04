@@ -44,6 +44,7 @@ public class FileCoverage extends AbstractFileMetrics {
         return null;
     }
 
+    @Override
     public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {

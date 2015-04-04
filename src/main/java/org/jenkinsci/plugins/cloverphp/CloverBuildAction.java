@@ -36,6 +36,7 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
 
     private transient WeakReference<ProjectCoverage> report;
 
+    @Override
     public HealthReport getBuildHealth() {
         if (healthyTarget == null || unhealthyTarget == null) {
             return null;
@@ -54,7 +55,7 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
             return null;
         }
 
-        Localizable description = null;
+        Localizable description;
         switch (minKey) {
             case METHOD:
                 description = Messages._CloverBuildAction_MethodCoverage(
@@ -77,18 +78,22 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
         return new HealthReport(minValue, description);
     }
 
+    @Override
     public String getIconFileName() {
         return CloverProjectAction.ICON;
     }
 
+    @Override
     public String getDisplayName() {
         return Messages.CloverBuildAction_DisplayName();
     }
 
+    @Override
     public String getUrlName() {
         return "cloverphp-report";
     }
 
+    @Override
     public Object getTarget() {
         return getResult();
     }

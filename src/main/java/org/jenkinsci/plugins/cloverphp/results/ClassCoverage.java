@@ -8,6 +8,7 @@ import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
  */
 public class ClassCoverage extends AbstractClassMetrics {
 
+    @Override
     public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {

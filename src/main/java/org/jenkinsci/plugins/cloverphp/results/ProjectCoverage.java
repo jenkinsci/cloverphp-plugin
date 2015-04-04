@@ -45,6 +45,7 @@ public class ProjectCoverage extends AbstractProjectMetrics {
         return findFileCoverage(token);
     }
 
+    @Override
     public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
         if (action == null) {

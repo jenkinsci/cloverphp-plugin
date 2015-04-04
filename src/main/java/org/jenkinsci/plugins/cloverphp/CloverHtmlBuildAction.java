@@ -20,6 +20,7 @@ public class CloverHtmlBuildAction implements Action {
         this.buildReportPath = buildReportPath;
     }
 
+    @Override
     public String getDisplayName() {
         return Messages.CloverHtmlBuildAction_DisplayName();
     }
@@ -36,10 +37,12 @@ public class CloverHtmlBuildAction implements Action {
                 CloverProjectAction.ICON, false);
     }
 
+    @Override
     public String getIconFileName() {
         return CloverProjectAction.ICON;
     }
 
+    @Override
     public String getUrlName() {
         return "cloverphp-html";
     }
