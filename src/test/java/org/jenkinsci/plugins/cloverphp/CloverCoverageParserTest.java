@@ -120,4 +120,18 @@ public class CloverCoverageParserTest {
         assertEquals(2, classResult.getCoveredelements());
     }
 
+    @Test
+    public void testParseNamespaces() throws Exception {
+        // GIVEN an clover report with files inside namespaces
+
+        // WHEN parsing the file
+        ProjectCoverage result = CloverCoverageParser.parse(getClass().getResourceAsStream("clover-namespaces.xml"));
+
+        // it should produce a valid ProjectCoverage class with 6 files in it
+        assertNotNull(result);
+        assertEquals(ProjectCoverage.class, result.getClass());
+        assertEquals(6, result.getFiles());
+
+    }
+
 }
