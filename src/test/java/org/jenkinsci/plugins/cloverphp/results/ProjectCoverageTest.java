@@ -101,7 +101,7 @@ public class ProjectCoverageTest {
         target.addFileCoverage(fc1);
         target.addFileCoverage(fc2);
 
-        assertEquals(fc2, target.getDynamic("org.jenkinsci", req, res));
+        assertEquals(fc2, (FileCoverage)target.getDynamic("org.jenkinsci", req, res));
     }
 
     /**

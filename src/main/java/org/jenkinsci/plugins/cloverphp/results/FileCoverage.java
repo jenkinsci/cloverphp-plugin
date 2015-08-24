@@ -55,7 +55,17 @@ public class FileCoverage extends AbstractFileMetrics {
         if (projectCoverage == null) {
             return null;
         }
-        return projectCoverage.findFileCoverage(getURLSafeName());
+        FileCoverage fileCoverage = null;
+        if(getParent() instanceof PackageCoverage) {
+            PackageCoverage packageCoverage = projectCoverage.findPackageCoverage(getParent().getURLSafeName());
+            if (packageCoverage != null) {
+                fileCoverage = packageCoverage.findFileCoverage(getURLSafeName());
+            }
+        }
+        if (fileCoverage == null) {
+            fileCoverage = projectCoverage.findFileCoverage(getURLSafeName());
+        }
+        return fileCoverage;
     }
 
     @Override

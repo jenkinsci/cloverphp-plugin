@@ -59,15 +59,15 @@ public abstract class AbstractClassMetrics {
     private AbstractBuild owner;
 
     public Ratio getMethodCoverage() {
-        return Ratio.create(coveredmethods, methods);
+        return Ratio.create(getCoveredmethods(), getMethods());
     }
 
     public Ratio getStatementCoverage() {
-        return Ratio.create(coveredstatements, statements);
+        return Ratio.create(getCoveredstatements(), getStatements());
     }
 
     public Ratio getElementCoverage() {
-        return Ratio.create(coveredelements, elements);
+        return Ratio.create(getCoveredelements(), getElements());
     }
 
     /**
@@ -188,7 +188,11 @@ public abstract class AbstractClassMetrics {
     }
 
     public String getURLSafeName() {
-        return Util.rawEncode(name.replaceAll("[/+]", "_"));
+        return safelyEncodedName(this.name);
+    }
+
+    public static String safelyEncodedName(String name) {
+        return Util.rawEncode(name.replaceAll("[/\\\\+]", "_"));
     }
 
     /**

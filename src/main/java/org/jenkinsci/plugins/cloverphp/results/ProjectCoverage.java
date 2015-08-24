@@ -19,14 +19,24 @@ import org.kohsuke.stapler.StaplerResponse;
 public class ProjectCoverage extends AbstractProjectMetrics {
 
     private List<FileCoverage> fileCoverages = new ArrayList<FileCoverage>();
+    private List<PackageCoverage> packageCoverages = new ArrayList<PackageCoverage>();
 
     public List<FileCoverage> getChildren() {
         return getFileCoverages();
     }
 
+    public List<PackageCoverage> getPackageCoverages() {
+        return packageCoverages;
+    }
+
     public boolean addFileCoverage(FileCoverage result) {
         result.setParent(this);
         return fileCoverages.add(result);
+    }
+
+    public boolean addPackageCoverage(PackageCoverage result) {
+        result.setParent(this);
+        return packageCoverages.add(result);
     }
 
     public List<FileCoverage> getFileCoverages() {
@@ -41,9 +51,34 @@ public class ProjectCoverage extends AbstractProjectMetrics {
         }
         return null;
     }
+    
+    public PackageCoverage findPackageCoverage(String token) {
+        for (PackageCoverage i : packageCoverages) {
+            if (token.equals(i.getURLSafeName())) {
+                return i;
+            }
+        }
+        return null;
+    }
 
-    public FileCoverage getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
-        return findFileCoverage(token);
+    /**
+     * Method to expose subpages to the Stapler HTTP server.
+     * It tries from the list of files first and then tries from the list of packages.
+     *
+     * @param token
+     * @param req
+     * @param rsp
+     * @return AbstractClassMetrics can be any of FileCoverage or PackageCoverage
+     * @throws IOException
+     */
+    public AbstractClassMetrics getDynamic(String token, StaplerRequest req, StaplerResponse rsp) throws IOException {
+        AbstractClassMetrics candidate = findFileCoverage(token);
+        if(candidate != null) {
+            return candidate;
+        }
+
+        candidate = findPackageCoverage(token);
+        return candidate;
     }
 
     @Override
@@ -61,5 +96,17 @@ public class ProjectCoverage extends AbstractProjectMetrics {
         for (FileCoverage p : fileCoverages) {
             p.setOwner(owner);
         }
+        for (PackageCoverage p: packageCoverages) {
+            p.setOwner(owner);
+        }
+    }
+
+    @Override
+    public String getName() {
+        String name = super.getName();
+        if(name == null && getOwner() != null) {
+            name = getOwner().getDisplayName();
+        }
+        return name;
     }
 }

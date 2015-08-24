@@ -68,17 +68,11 @@ public class CoverageTarget implements Serializable {
         Map<CoverageMetric, Integer> result = new HashMap<CoverageMetric, Integer>();
 
         j = calcRangeScore(methodCoverage, min.methodCoverage, coverage.getMethodCoverage().getPercentage());
-        if (j != null) {
-            result.put(CoverageMetric.METHOD, Integer.valueOf(j));
-        }
+        result.put(CoverageMetric.METHOD, j);
         j = calcRangeScore(statementCoverage, min.statementCoverage, coverage.getStatementCoverage().getPercentage());
-        if (j != null) {
-            result.put(CoverageMetric.STATEMENT, Integer.valueOf(j));
-        }
+        result.put(CoverageMetric.STATEMENT, j);
         j = calcRangeScore(elementCoverage, min.elementCoverage, coverage.getElementCoverage().getPercentage());
-        if (j != null) {
-            result.put(CoverageMetric.ELEMENT, Integer.valueOf(j));
-        }
+        result.put(CoverageMetric.ELEMENT, j);
         return result;
     }
 
