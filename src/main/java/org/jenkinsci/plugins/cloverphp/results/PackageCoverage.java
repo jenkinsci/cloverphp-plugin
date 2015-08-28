@@ -1,7 +1,6 @@
 package org.jenkinsci.plugins.cloverphp.results;
 
 import hudson.model.AbstractBuild;
-import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
 
 /**
  * Created by Patrick Brückner on 24.08.15.
@@ -121,4 +120,13 @@ public class PackageCoverage extends ProjectCoverage {
         }
     }
 
+    @Override
+    public AbstractClassMetrics getPreviousResult() {
+
+        ProjectCoverage parentPreviousResult = (ProjectCoverage) getParent().getPreviousResult();
+        if (parentPreviousResult == null) {
+            return null;
+        }
+        return parentPreviousResult.findPackageCoverage(getURLSafeName());
+    }
 }
