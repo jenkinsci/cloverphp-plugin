@@ -13,6 +13,14 @@
     <name>Jenkins Clover PHP plugin</name>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Clover+PHP+Plugin</url>
 
+    <licenses>
+        <license>
+            <name>The MIT license</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    
     <developers>
         <developer>
             <id>ssogabe</id>
@@ -24,8 +32,8 @@
         <connection>scm:git:git://github.com/jenkinsci/cloverphp-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/cloverphp-plugin.git</developerConnection>
         <url>http://github.com/jenkinsci/cloverphp-plugin</url>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
     <properties>
         <mockito.version>1.10.19</mockito.version>
