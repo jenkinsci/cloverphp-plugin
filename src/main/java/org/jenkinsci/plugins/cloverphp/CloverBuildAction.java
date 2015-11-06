@@ -59,17 +59,22 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
         switch (minKey) {
             case METHOD:
                 description = Messages._CloverBuildAction_MethodCoverage(
-                        projectCoverage.getMethodCoverage().getPercentage(),
+                        Ratio.create(
+                                projectCoverage.getMethodCoverage().getPercentage(),
+                                this.healthyTarget.getMethodCoverage()).getPercentage(),
                         projectCoverage.getMethodCoverage().toString());
                 break;
             case STATEMENT:
                 description = Messages._CloverBuildAction_StatementCoverage(
-                        projectCoverage.getStatementCoverage().getPercentage(),
+                        Ratio.create(
+                                projectCoverage.getStatementCoverage().getPercentage(),
+                                this.healthyTarget.getStatementCoverage()).getPercentage(),
                         projectCoverage.getStatementCoverage().toString());
                 break;
             case ELEMENT:
                 description = Messages._CloverBuildAction_ElementCoverage(
-                        projectCoverage.getElementCoverage().getPercentage(),
+                        Ratio.create(projectCoverage.getElementCoverage().getPercentage(),
+                                this.healthyTarget.getStatementCoverage()).getPercentage(),
                         projectCoverage.getElementCoverage().toString());
                 break;
             default:

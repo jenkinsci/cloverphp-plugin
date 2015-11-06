@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.cloverphp;
 
 import hudson.model.AbstractBuild;
+import hudson.model.HealthReport;
 import hudson.model.Result;
 import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
 import org.jenkinsci.plugins.cloverphp.targets.CoverageTarget;
@@ -131,6 +132,36 @@ public class CloverBuildActionTest {
         CloverBuildAction action = new CloverBuildAction(build, workspacePath, prjCoverage, healthyTarget, unhealthyTarget);
 
         assertNull(action.getPreviousResult());
+    }
+
+    @Test
+    public void testHealthReportAmplification() {
+        // GIVEN a build with some coverage metrics
+        AbstractBuild<?, ?> build = mock(AbstractBuild.class);
+        String workspacePath = "/tmp/workpath";
+        ProjectCoverage prjCoverage = new ProjectCoverage();
+        CoverageTarget healthyTarget = new CoverageTarget();
+        CoverageTarget unhealthyTarget = new CoverageTarget();
+
+        prjCoverage.setCoveredelements(300);
+        prjCoverage.setElements(1000);
+        healthyTarget.setElementCoverage(30); // 300/1000 = 30%, target 30% => 100% match
+
+        prjCoverage.setCoveredstatements(300);
+        prjCoverage.setStatements(1000);
+        healthyTarget.setStatementCoverage(40); // 300/1000 = 30%, target 40% => 75% match
+
+        prjCoverage.setCoveredmethods(300);
+        prjCoverage.setMethods(1000);
+        healthyTarget.setMethodCoverage(50); // 300/1000 = 30%, target 50% => 60% match
+
+        CloverBuildAction action = new CloverBuildAction(build, workspacePath, prjCoverage, healthyTarget, unhealthyTarget);
+
+        // WHEN calculating the health report
+        HealthReport healthReport = action.getBuildHealth();
+
+        // IT shoud
+        assertEquals("return 60% score, as this is the lowest value", 60, healthReport.getScore());
     }
 
 }
