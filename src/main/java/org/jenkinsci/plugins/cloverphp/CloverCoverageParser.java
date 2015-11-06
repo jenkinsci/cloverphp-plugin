@@ -2,6 +2,7 @@ package org.jenkinsci.plugins.cloverphp;
 
 import org.jenkinsci.plugins.cloverphp.results.ClassCoverage;
 import org.jenkinsci.plugins.cloverphp.results.FileCoverage;
+import org.jenkinsci.plugins.cloverphp.results.PackageCoverage;
 import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
 import hudson.util.IOException2;
 import java.io.BufferedInputStream;
@@ -9,6 +10,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+
 import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
 
@@ -33,13 +36,22 @@ public final class CloverCoverageParser {
         if (pathPrefix == null) {
             return result;
         }
-        for (FileCoverage f : result.getFileCoverages()) {
+        trimPathPrefix(pathPrefix, result.getFileCoverages());
+
+        for(PackageCoverage pc : result.getPackageCoverages()) {
+            trimPathPrefix(pathPrefix, pc.getFileCoverages());
+        }
+
+        return result;
+    }
+
+    protected static void trimPathPrefix(String pathPrefix, List<FileCoverage> fileCoverages) {
+        for (FileCoverage f : fileCoverages) {
             if (f.getName().startsWith(pathPrefix)) {
                 f.setName(f.getName().substring(pathPrefix.length()));
             }
             f.setName(f.getName().replace('\\', '/'));
         }
-        return result;
     }
 
     public static ProjectCoverage parse(File inFile, String pathPrefix) throws IOException {
@@ -69,21 +81,7 @@ public final class CloverCoverageParser {
         if (in == null) {
             throw new NullPointerException();
         }
-        Digester digester = new Digester();
-        digester.setClassLoader(CloverCoverageParser.class.getClassLoader());
-        digester.addObjectCreate("coverage/project", ProjectCoverage.class);
-        digester.addSetProperties("coverage/project");
-        digester.addSetProperties("coverage/project/metrics");
-
-        digester.addObjectCreate("coverage/project/file", FileCoverage.class);
-        digester.addSetProperties("coverage/project/file");
-        digester.addSetProperties("coverage/project/file/metrics");
-        digester.addSetNext("coverage/project/file", "addFileCoverage", FileCoverage.class.getName());
-
-        digester.addObjectCreate("coverage/project/file/class", ClassCoverage.class);
-        digester.addSetProperties("coverage/project/file/class");
-        digester.addSetProperties("coverage/project/file/class/metrics");
-        digester.addSetNext("coverage/project/file/class", "addClassCoverage", ClassCoverage.class.getName());
+        Digester digester = buildDigester();
 
         try {
             ProjectCoverage coverage = (ProjectCoverage) digester.parse(in);
@@ -93,6 +91,34 @@ public final class CloverCoverageParser {
             return coverage;
         } catch (SAXException e) {
             throw new IOException2("Cannot parse coverage results", e);
+        }
+    }
+
+    protected static Digester buildDigester() {
+        Digester digester = new Digester();
+        digester.setClassLoader(CloverCoverageParser.class.getClassLoader());
+
+        addDigester(digester, "coverage/project", ProjectCoverage.class);
+        addDigester(digester, "coverage/project/file", FileCoverage.class, "addFileCoverage");
+        addDigester(digester, "coverage/project/file/class", ClassCoverage.class, "addClassCoverage");
+
+        addDigester(digester, "coverage/project/package", PackageCoverage.class, "addPackageCoverage");
+        addDigester(digester, "coverage/project/package/file", FileCoverage.class, "addFileCoverage");
+        addDigester(digester, "coverage/project/package/file/class", ClassCoverage.class, "addClassCoverage");
+
+        return digester;
+    }
+
+    private static void addDigester(Digester digester, String path, Class _class) {
+        addDigester(digester, path, _class, null);
+    }
+
+    private static void addDigester(Digester digester, String path, Class _class, String next) {
+        digester.addObjectCreate(path, _class);
+        digester.addSetProperties(path);
+        digester.addSetProperties(path + "/metrics");
+        if(next != null) {
+            digester.addSetNext(path, next, _class.getName());
         }
     }
 }

@@ -1,0 +1,30 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form"
+         xmlns:clover="/org/jenkinsci/plugins/cloverphp/tags">
+
+    <h1>${%Clover PHP Coverage Report}</h1>
+
+    <h2>${scope} ${it.name}</h2>
+
+    <j:if test="${it.previousResult != null}">
+      <clover:trendGraph />
+    </j:if>
+
+    <h2>${%Overall Coverage Summary}</h2>
+
+    <clover:summaryTable title="${%Project}" />
+
+    <j:if test="${size(it.children) > 0}">
+        <h2>${%Coverage Breakdown by File}</h2>
+        <j:set var="group" value="${it.children}"/>
+        <clover:breakdownTable />
+    </j:if>
+
+    <j:if test="${size(it.packageCoverages) > 0}">
+        <h2>${%Coverage Breakdown by Namespace}</h2>
+        <j:set var="group" value="${it.packageCoverages}"/>
+        <clover:breakdownTable />
+    </j:if>
+
+</j:jelly>

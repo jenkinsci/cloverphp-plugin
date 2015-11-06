@@ -9,6 +9,16 @@ import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
  */
 public class ClassCoverage extends AbstractClassMetrics {
 
+    String namespace;
+
+    public String getNamespace() {
+        return namespace;
+    }
+
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
     @Override
     public AbstractClassMetrics getPreviousResult() {
         CloverBuildAction action = getPreviousCloverBuildAction();
@@ -19,10 +29,22 @@ public class ClassCoverage extends AbstractClassMetrics {
         if (pc == null) {
             return null;
         }
-        FileCoverage fc = pc.findFileCoverage(getParent().getURLSafeName());
+        FileCoverage fc = null;
+        if(getNamespace() != null) {
+            PackageCoverage packageCoverage = pc.findPackageCoverage(safelyEncodedName(getNamespace()));
+            if(packageCoverage != null) {
+                fc = packageCoverage.findFileCoverage(getParent().getURLSafeName());
+            }
+        }
+
+        if (fc == null) {
+            fc = pc.findFileCoverage(getParent().getURLSafeName());
+        }
+
         if (fc == null) {
             return null;
         }
+
         return fc.findClassCoverage(getURLSafeName());
     }
 }

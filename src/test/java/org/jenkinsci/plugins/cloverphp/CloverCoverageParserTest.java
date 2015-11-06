@@ -1,10 +1,10 @@
 package org.jenkinsci.plugins.cloverphp;
 
 import java.util.List;
+
+import org.jenkinsci.plugins.cloverphp.results.*;
 import org.junit.Test;
-import org.jenkinsci.plugins.cloverphp.results.ClassCoverage;
-import org.jenkinsci.plugins.cloverphp.results.FileCoverage;
-import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
+
 import static org.junit.Assert.*;
 
 /**
@@ -118,6 +118,27 @@ public class CloverCoverageParserTest {
         assertEquals(1, classResult.getCoveredstatements());
         assertEquals(4, classResult.getElements());
         assertEquals(2, classResult.getCoveredelements());
+    }
+
+    @Test
+    public void testParsingNamespacedProject() throws Exception {
+        // GIVEN an clover report with files inside namespaces
+
+        // WHEN parsing the file
+        ProjectCoverage result = CloverCoverageParser.parse(getClass().getResourceAsStream("clover-namespaces.xml"));
+
+        // it should produce a valid ProjectCoverage class with 6 files in it
+        assertNotNull(result);
+        assertEquals(ProjectCoverage.class, result.getClass());
+        assertEquals("All six files should be in the list of files", 6, result.getFiles());
+
+        int filesInPackages = 0;
+        for(PackageCoverage p : result.getPackageCoverages()) {
+            filesInPackages += p.getFileCoverages().size();
+        }
+
+        assertEquals("Four files should be added to the packages objects", 4, filesInPackages);
+
     }
 
 }
