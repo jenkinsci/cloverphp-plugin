@@ -22,7 +22,7 @@ public class ConfigurationRoundtripTest extends HudsonTestCase {
         submit(new WebClient().getPage(p, "configure").getFormByName("config"));
 
         assertEquals("reports", publisher.getReportDir());
-        assertEquals("coverage.xml", publisher.getXmlLocation());
+        assertEquals("coverage.xml", publisher.getCloverXml());
         assertFalse(publisher.isDisableArchiving());
         assertTrue(publisher.isPublishHtmlReport());
     }
