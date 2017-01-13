@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.cloverphp.results;
 
 import hudson.model.AbstractBuild;
+import hudson.model.Run;
 import org.jenkinsci.plugins.cloverphp.CloverBuildAction;
 
 import java.io.IOException;
@@ -91,7 +92,7 @@ public class ProjectCoverage extends AbstractProjectMetrics {
     }
 
     @Override
-    public void setOwner(AbstractBuild owner) {
+    public void setOwner(Run owner) {
         super.setOwner(owner);
         for (FileCoverage p : fileCoverages) {
             p.setOwner(owner);
