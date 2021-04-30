@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.cloverphp;
 
+import org.apache.commons.digester3.Digester;
 import org.jenkinsci.plugins.cloverphp.results.ClassCoverage;
 import org.jenkinsci.plugins.cloverphp.results.FileCoverage;
 import org.jenkinsci.plugins.cloverphp.results.PackageCoverage;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
 
 /**
