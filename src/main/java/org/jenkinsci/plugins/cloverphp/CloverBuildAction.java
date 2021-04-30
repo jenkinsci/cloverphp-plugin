@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jvnet.localizer.Localizable;
+import org.xml.sax.SAXException;
 
 /**
  * A health reporter for the individual build page.
@@ -156,6 +157,9 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
             r.setOwner(owner);
             report = new WeakReference<ProjectCoverage>(r);
             return r;
+        } catch (SAXException e) {
+            LOGGER.log(Level.WARNING, "Failed to load " + reportFile, e);
+            return null;
         } catch (IOException e) {
             LOGGER.log(Level.WARNING, "Failed to load " + reportFile, e);
             return null;

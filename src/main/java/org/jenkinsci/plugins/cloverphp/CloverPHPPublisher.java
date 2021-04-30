@@ -34,6 +34,7 @@ import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import org.xml.sax.SAXException;
 
 /**
  * Clover {@link Publisher}.
@@ -210,6 +211,9 @@ public class CloverPHPPublisher extends Recorder {
             ProjectCoverage result = null;
             try {
                 result = CloverCoverageParser.parse(cloverXmlReport, workspacePath);
+            } catch (SAXException e) {
+                e.printStackTrace(listener.fatalError("Unable to parse " + cloverXmlReport));
+                build.setResult(Result.FAILURE);
             } catch (IOException e) {
                 Util.displayIOException(e, listener);
                 e.printStackTrace(listener.fatalError("Unable to parse " + cloverXmlReport));
