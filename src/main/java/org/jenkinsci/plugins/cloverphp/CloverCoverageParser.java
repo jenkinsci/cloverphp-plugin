@@ -1,5 +1,6 @@
 package org.jenkinsci.plugins.cloverphp;
 
+import org.apache.commons.digester3.Digester;
 import org.jenkinsci.plugins.cloverphp.results.ClassCoverage;
 import org.jenkinsci.plugins.cloverphp.results.FileCoverage;
 import org.jenkinsci.plugins.cloverphp.results.PackageCoverage;
@@ -12,8 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.commons.digester.Digester;
 import org.xml.sax.SAXException;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,7 +56,7 @@ public final class CloverCoverageParser {
         }
     }
 
-    public static ProjectCoverage parse(File inFile, String pathPrefix) throws IOException {
+    public static ProjectCoverage parse(File inFile, String pathPrefix) throws IOException, SAXException {
         FileInputStream fileInputStream = null;
         BufferedInputStream bufferedInputStream = null;
         try {
@@ -77,7 +79,7 @@ public final class CloverCoverageParser {
         }
     }
 
-    public static ProjectCoverage parse(InputStream in) throws IOException {
+    public static ProjectCoverage parse(InputStream in) throws IOException, SAXException {
         if (in == null) {
             throw new NullPointerException();
         }
@@ -94,8 +96,19 @@ public final class CloverCoverageParser {
         }
     }
 
-    protected static Digester buildDigester() {
+    protected static Digester buildDigester() throws SAXException {
         Digester digester = new Digester();
+        if (!Boolean.getBoolean(CloverCoverageParser.class.getName() + ".UNSAFE")) {
+            digester.setXIncludeAware(false);
+            try {
+                digester.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+                digester.setFeature("http://xml.org/sax/features/external-general-entities", false);
+                digester.setFeature("http://xml.org/sax/features/external-parameter-entities", false);
+                digester.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+            } catch (ParserConfigurationException ex) {
+                throw new SAXException("Failed to securely configure xml digester parser", ex);
+            }
+        }
         digester.setClassLoader(CloverCoverageParser.class.getClassLoader());
 
         addDigester(digester, "coverage/project", ProjectCoverage.class);
