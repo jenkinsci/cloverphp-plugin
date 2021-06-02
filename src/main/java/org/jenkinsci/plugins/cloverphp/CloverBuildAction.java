@@ -1,9 +1,6 @@
 package org.jenkinsci.plugins.cloverphp;
 
-import hudson.model.AbstractBuild;
-import hudson.model.HealthReport;
-import hudson.model.HealthReportingAction;
-import hudson.model.Result;
+import hudson.model.*;
 import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
 import org.jenkinsci.plugins.cloverphp.targets.CoverageMetric;
 import org.jenkinsci.plugins.cloverphp.targets.CoverageTarget;
@@ -27,7 +24,7 @@ import org.xml.sax.SAXException;
  */
 public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
 
-    private final AbstractBuild owner;
+    private final Run owner;
 
     private String buildBaseDir;
 
@@ -110,8 +107,8 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
 
     /** Gets the previous {@link CloverBuildAction} of the given build. */
     /*package*/
-    static CloverBuildAction getPreviousResult(AbstractBuild start) {
-        AbstractBuild<?, ?> b = start;
+    static CloverBuildAction getPreviousResult(Run start) {
+        Run<?, ?> b = start;
         while (true) {
             b = b.getPreviousBuild();
             if (b == null) {
@@ -127,7 +124,7 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
         }
     }
 
-    CloverBuildAction(AbstractBuild owner, String workspacePath, ProjectCoverage r, CoverageTarget healthyTarget,
+    CloverBuildAction(Run owner, String workspacePath, ProjectCoverage r, CoverageTarget healthyTarget,
             CoverageTarget unhealthyTarget) {
         this.owner = owner;
         this.report = new WeakReference<ProjectCoverage>(r);
@@ -168,8 +165,8 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
     
     private static final Logger LOGGER = Logger.getLogger(CloverBuildAction.class.getName());
 
-    public static CloverBuildAction load(AbstractBuild<?, ?> build, String workspacePath, ProjectCoverage result,
-            CoverageTarget healthyTarget, CoverageTarget unhealthyTarget) {
+    public static CloverBuildAction load(Run<?, ?> build, String workspacePath, ProjectCoverage result,
+                                         CoverageTarget healthyTarget, CoverageTarget unhealthyTarget) {
         return new CloverBuildAction(build, workspacePath, result, healthyTarget, unhealthyTarget);
     }
 }

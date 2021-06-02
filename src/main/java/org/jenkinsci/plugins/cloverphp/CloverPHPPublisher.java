@@ -8,14 +8,8 @@ import hudson.Util;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
 import hudson.matrix.MatrixProject;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.FreeStyleProject;
-import hudson.model.Items;
-import hudson.model.Project;
-import hudson.model.Result;
+import hudson.model.*;
+import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.plugins.cloverphp.results.ProjectCoverage;
 import org.jenkinsci.plugins.cloverphp.targets.CoverageMetric;
 import org.jenkinsci.plugins.cloverphp.targets.CoverageTarget;
@@ -36,18 +30,20 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.xml.sax.SAXException;
 
+import javax.annotation.Nonnull;
+
 /**
  * Clover {@link Publisher}.
  *
  * @author Stephen Connolly
  */
-public class CloverPHPPublisher extends Recorder {
+public class CloverPHPPublisher extends Recorder implements SimpleBuildStep {
 
     private final boolean publishHtmlReport;
 
     private final String reportDir;
 
-    private final String xmlLocation;
+    private final String cloverXml;
 
     private final boolean disableArchiving;
 
@@ -59,12 +55,12 @@ public class CloverPHPPublisher extends Recorder {
 
     /**
      * @param reportDir
-     * @param xmlLocation
+     * @param cloverXml
      * @stapler-constructor
      */
     @DataBoundConstructor
-    public CloverPHPPublisher(String xmlLocation, String publishHtmlReport, String reportDir, boolean disableArchiving) {
-        this.xmlLocation = Util.fixEmptyAndTrim(xmlLocation);
+    public CloverPHPPublisher(String cloverXml, String publishHtmlReport, String reportDir, boolean disableArchiving) {
+        this.cloverXml = Util.fixEmptyAndTrim(cloverXml);
         this.publishHtmlReport = Util.fixEmptyAndTrim(publishHtmlReport) != null;
         this.reportDir = Util.fixEmptyAndTrim(reportDir);
         this.disableArchiving = disableArchiving;
@@ -81,8 +77,8 @@ public class CloverPHPPublisher extends Recorder {
         return reportDir;
     }
 
-    public String getXmlLocation() {
-        return xmlLocation;
+    public String getCloverXml() {
+        return cloverXml;
     }
 
     public boolean isDisableArchiving() {
@@ -147,7 +143,7 @@ public class CloverPHPPublisher extends Recorder {
      * Gets the directory where the Clover Report is stored for the given build.
      */
     /*package*/
-    static File getCloverXmlReport(AbstractBuild<?, ?> build) {
+    static File getCloverXmlReport(Run<?, ?> build) {
         // backward compatibility
         // since 0.3
         File cloverphpBuildTarget = new File(build.getRootDir(), "cloverphp");
@@ -160,10 +156,21 @@ public class CloverPHPPublisher extends Recorder {
     @Override
     public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
             throws InterruptedException {
+        try {
+            perform(build, build.getWorkspace(), launcher, listener);
+        } catch (IOException e) {
+            Util.displayIOException(e, listener);
+            build.setResult(Result.FAILURE);
+        }
 
+        return true;
+    }
+
+    @Override
+    public void perform(@Nonnull Run<?, ?> build, @Nonnull FilePath workspace, @Nonnull Launcher launcher, @Nonnull TaskListener listener) throws InterruptedException, IOException {
         final File buildRootDir = build.getRootDir(); // should this top level?
         final FilePath cloverphpBuildTarget = new FilePath(buildRootDir).child("cloverphp");
-        final FilePath workspace = build.getWorkspace();
+
         try {
             listener.getLogger().println("Publishing Clover coverage report...");
 
@@ -179,28 +186,26 @@ public class CloverPHPPublisher extends Recorder {
                 final boolean htmlExists = copyHtmlReport(coverageReportDir, htmlReportDir, listener);
                 if (htmlExists) {
                     // only add the HTML build action, if the HTML report is available
-                    build.getActions().add(new CloverHtmlBuildAction(htmlReportDir));
+                    build.addAction(new CloverHtmlBuildAction(htmlReportDir));
                 }
             }
 
-            final boolean xmlExists = copyXmlReport(workspace, cloverphpBuildTarget, listener, env.expand(xmlLocation));
-            processCloverXml(build, listener, cloverphpBuildTarget);
+            final boolean xmlExists = copyXmlReport(workspace, cloverphpBuildTarget, listener, env.expand(cloverXml));
+            processCloverXml(build, workspace, listener, cloverphpBuildTarget);
 
         } catch (IOException e) {
             Util.displayIOException(e, listener);
             build.setResult(Result.FAILURE);
         }
 
-        return true;
     }
 
     /**
      * Process the clover.xml from the build directory. The clover.xml must have been already copied to the build dir.
-     *
      */
-    private void processCloverXml(AbstractBuild<?, ?> build, BuildListener listener, FilePath buildTarget)
+    private void processCloverXml(Run<?, ?> build, FilePath workspace, TaskListener listener, FilePath buildTarget)
             throws InterruptedException {
-        String workspacePath = build.getWorkspace().getRemote();
+        String workspacePath = workspace.getRemote();
         if (!workspacePath.endsWith(File.separator)) {
             workspacePath += File.separator;
         }
@@ -237,7 +242,7 @@ public class CloverPHPPublisher extends Recorder {
         }
     }
 
-    private boolean copyXmlReport(FilePath workspace, FilePath buildTarget, BuildListener listener, String xml)
+    private boolean copyXmlReport(FilePath workspace, FilePath buildTarget, TaskListener listener, String xml)
             throws IOException, InterruptedException {
         // check one directory deep for a clover.xml, if there is not one in the coverageReport dir already
         // the clover auto-integration saves clover reports in: clover/${ant.project.name}/clover.xml
@@ -255,7 +260,7 @@ public class CloverPHPPublisher extends Recorder {
 
     }
 
-    private boolean copyHtmlReport(FilePath coverageReportDir, FilePath buildTarget, BuildListener listener)
+    private boolean copyHtmlReport(FilePath coverageReportDir, FilePath buildTarget, TaskListener listener)
             throws IOException, InterruptedException {
         // Copy the HTML coverage report
         final FilePath htmlIndexHtmlPath = coverageReportDir.child("index.html");
@@ -268,8 +273,8 @@ public class CloverPHPPublisher extends Recorder {
         return false;
     }
 
-    private void flagMissingCloverXml(BuildListener listener, AbstractBuild<?, ?> build) {
-        listener.getLogger().println("Could not find '" + reportDir + "/" + getXmlLocation()
+    private void flagMissingCloverXml(TaskListener listener, Run<?, ?> build) {
+        listener.getLogger().println("Could not find '" + reportDir + "/" + getCloverXml()
                 + "'.  Did you generate " + "the XML report for Clover?");
     }
 
@@ -298,8 +303,9 @@ public class CloverPHPPublisher extends Recorder {
     @Extension
     public static final DescriptorImpl DESCRIPTOR = new DescriptorImpl();
 
+
     /**
-     * Descriptor for {@link CloverPublisher}. Used as a singleton. The class is marked as public so that it can be
+     * Descriptor for {@link CloverPHPPublisher}. Used as a singleton. The class is marked as public so that it can be
      * accessed from views.
      * <p/>
      * <p/>
@@ -333,13 +339,13 @@ public class CloverPHPPublisher extends Recorder {
         }
 
         /**
-         * Creates a new instance of {@link CloverPublisher} from a submitted form.
+         * Creates a new instance of {@link CloverPHPPublisher} from a submitted form.
          */
         @Override
         public CloverPHPPublisher newInstance(StaplerRequest req, JSONObject formData) throws FormException {
             CloverPHPPublisher instance = req.bindParameters(CloverPHPPublisher.class, "clover.");
-            if (instance.getXmlLocation() == null) {
-                throw new FormException(Messages.CloverPHPPublisher_xmlLocation_required(), "xmlLocation");
+            if (instance.getCloverXml() == null) {
+                throw new FormException(Messages.CloverPHPPublisher_cloverXml_required(), "cloverXml");
             }
             if (instance.isPublishHtmlReport() && instance.getReportDir() == null) {
                 throw new FormException(Messages.CloverPHPPublisher_reportDir_required(), "reportDir");
