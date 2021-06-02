@@ -135,6 +135,39 @@ public class CloverBuildActionTest {
     }
 
     @Test
+    public void testAllTargetsReached() {
+        // GIVEN a build with some coverage metrics
+        AbstractBuild<?, ?> build = mock(AbstractBuild.class);
+        String workspacePath = "/tmp/workpath";
+        ProjectCoverage prjCoverage = new ProjectCoverage();
+        CoverageTarget healthyTarget = new CoverageTarget();
+        CoverageTarget unhealthyTarget = new CoverageTarget();
+
+        prjCoverage.setCoveredelements(100);
+        prjCoverage.setElements(100);
+        healthyTarget.setElementCoverage(100);
+
+        prjCoverage.setCoveredstatements(100);
+        prjCoverage.setStatements(100);
+        healthyTarget.setStatementCoverage(100);
+
+        prjCoverage.setCoveredmethods(100);
+        prjCoverage.setMethods(100);
+        healthyTarget.setMethodCoverage(100);
+
+        CloverBuildAction action = new CloverBuildAction(build, workspacePath, prjCoverage, healthyTarget, unhealthyTarget);
+
+        // WHEN calculating the health report
+        HealthReport healthReport = action.getBuildHealth();
+
+        // IT shoud
+        assertNotNull(healthReport);
+        assertEquals(100, healthReport.getScore());
+
+    }
+
+
+    @Test
     public void testHealthReportAmplification() {
         // GIVEN a build with some coverage metrics
         AbstractBuild<?, ?> build = mock(AbstractBuild.class);

@@ -45,18 +45,18 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
         ProjectCoverage projectCoverage = getResult();
         Map<CoverageMetric, Integer> scores = healthyTarget.getRangeScores(unhealthyTarget, projectCoverage);
         int minValue = 100;
-        CoverageMetric minKey = null;
+        CoverageMetric minKey = CoverageMetric.STATEMENT;
         for (Map.Entry<CoverageMetric, Integer> e : scores.entrySet()) {
             if (e.getValue() < minValue) {
                 minKey = e.getKey();
                 minValue = e.getValue();
             }
         }
-        if (minKey == null) {
-            return null;
-        }
 
-        Localizable description;
+        // we must set a default value here to make the compiler happy,
+        // but minKey cannot have a null value at this point
+        // (EnumMap does not allow null keys, and the minKey has a default value)
+        Localizable description = null;
         switch (minKey) {
             case METHOD:
                 description = Messages._CloverBuildAction_MethodCoverage(
@@ -78,8 +78,6 @@ public class CloverBuildAction implements HealthReportingAction, StaplerProxy {
                                 this.healthyTarget.getStatementCoverage()).getPercentage(),
                         projectCoverage.getElementCoverage().toString());
                 break;
-            default:
-                return null;
         }
         return new HealthReport(minValue, description);
     }

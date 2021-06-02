@@ -3,9 +3,9 @@ package org.jenkinsci.plugins.cloverphp.targets;
 import org.jenkinsci.plugins.cloverphp.results.AbstractClassMetrics;
 
 import java.io.Serializable;
+import java.util.EnumMap;
 import java.util.Set;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -65,7 +65,7 @@ public class CoverageTarget implements Serializable {
 
     public Map<CoverageMetric, Integer> getRangeScores(CoverageTarget min, AbstractClassMetrics coverage) {
         Integer j;
-        Map<CoverageMetric, Integer> result = new HashMap<CoverageMetric, Integer>();
+        Map<CoverageMetric, Integer> result = new EnumMap<CoverageMetric, Integer>(CoverageMetric.class);
 
         j = calcRangeScore(methodCoverage, min.methodCoverage, coverage.getMethodCoverage().getPercentage());
         result.put(CoverageMetric.METHOD, j);
@@ -73,6 +73,7 @@ public class CoverageTarget implements Serializable {
         result.put(CoverageMetric.STATEMENT, j);
         j = calcRangeScore(elementCoverage, min.elementCoverage, coverage.getElementCoverage().getPercentage());
         result.put(CoverageMetric.ELEMENT, j);
+
         return result;
     }
 
